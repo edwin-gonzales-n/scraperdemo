@@ -35,9 +35,9 @@ public class DemoApplication {
                     int id = Integer.parseInt(htmlItem.getAttribute("id"));
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']")).asText();
                     String url = ((HtmlAnchor) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']/a")).getHrefAttribute();
-                    String author = ((HtmlElement) htmlItem.getFirstByXPath("./followingsibling:: tr/td[@class='subtext']/a[@class='hnuser']")).asText();
+                    String author = ((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/a[@class='hnuser']")).asText();
 
-                    int score = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./followingsibling:: tr/td[@class='subtext']/span[@class='score'] ")).asText().replace(" points", ""));
+                    int score = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/span[@class='score'] ")).asText().replace(" points", ""));
 
                     HackerNewsItem hnItem = new HackerNewsItem(title, url, author, score, position, id);
 
