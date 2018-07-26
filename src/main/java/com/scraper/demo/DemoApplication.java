@@ -15,7 +15,10 @@ public class DemoApplication {
 
     public static void main(String[] args) {
 
-        String baseUrl = "https://news.ycombinator.com/" ;
+        // 1st try to do in http://www.2400nuecesapartments.com/Floor-Plans
+
+        String baseUrl = "http://www.2400nuecesapartments.com/Floor-Plans/";
+//        String baseUrl = "https://news.ycombinator.com/" ;
 //        String baseUrl = "https://www.drudgereport.com/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -24,22 +27,26 @@ public class DemoApplication {
 //            HtmlPage page = client.getPage(baseUrl);
 //            System.out.println(page.asXml());
 //            System.out.println(page.asText());
-
             HtmlPage page = client.getPage(baseUrl);
-            List<HtmlElement> itemList = page.getByXPath("//tr[@class='athing']");
+//            List<HtmlElement> itemList = page.getByXPath("//tr[@class='athing']");
+            List<HtmlElement> itemList = page.getByXPath("//div[@id='isotope']");
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
                 for(HtmlElement htmlItem : itemList){
-                    int position = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./td/span")).asText().replace(".", ""));
-                    int id = Integer.parseInt(htmlItem.getAttribute("id"));
-                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']")).asText();
-                    String url = ((HtmlAnchor) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']/a")).getHrefAttribute();
-                    String author = ((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/a[@class='hnuser']")).asText();
+//                    int position = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./td/span")).asText().replace(".", ""));
+//                    int id = Integer.parseInt(htmlItem.getAttribute("id"));
+//                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']")).asText();
+//                    String url = ((HtmlAnchor) htmlItem.getFirstByXPath("./td[not(@valign='top')] [@class='title']/a")).getHrefAttribute();
+//                    String author = ((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/a[@class='hnuser']")).asText();
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[not(@class='fp-title')] [@class='title']")).asText();
+                    String url = ((HtmlAnchor) htmlItem.getFirstByXPath("./following-sibling :: a")).getHrefAttribute();
+//                    String author = ((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/a[@class='hnuser']")).asText();
 
-                    int score = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/span[@class='score'] ")).asText().replace(" points", ""));
+//                    int score = Integer.parseInt(((HtmlElement) htmlItem.getFirstByXPath("./following-sibling:: tr/td[@class='subtext']/span[@class='score'] ")).asText().replace(" points", ""));
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title, url, author, score, position, id);
+//                    HackerNewsItem hnItem = new HackerNewsItem(title, url, author, score, position, id);
+                    HackerNewsItem hnItem = new HackerNewsItem(title, url);
 
                     ObjectMapper mapper = new ObjectMapper();
                     String jsonString = mapper.writeValueAsString(hnItem) ;
@@ -47,6 +54,8 @@ public class DemoApplication {
                     System.out.println(jsonString);
                 }
             }
+
+
 
         }
         catch(Exception e){

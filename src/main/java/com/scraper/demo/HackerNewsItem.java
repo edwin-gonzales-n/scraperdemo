@@ -8,15 +8,15 @@ public class HackerNewsItem {
     private int position ;
     private int id ;
 
-    public HackerNewsItem(String title, String url, String author, int score, int position, int id)
+    public HackerNewsItem(String title, String url)
     {
         super();
         this.title = title;
         this.url = url;
-        this.author = author;
-        this.score = score;
-        this.position = position;
-        this.id = id;
+//        this.author = author;
+//        this.score = score;
+//        this.position = position;
+//        this.id = id;
     }
 
     public String getTitle() {
