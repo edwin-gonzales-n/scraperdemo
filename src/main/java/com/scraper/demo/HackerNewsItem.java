@@ -5,14 +5,12 @@ public class HackerNewsItem {
     private String info;
     public String price;
 
-
-
     public HackerNewsItem(String title, String info, String price)
     {
 //        super();
         this.title = title;
         this.info = info;
-        this.info = price;
+        this.price = price;
     }
 
     public String getPrice() { return price; }
