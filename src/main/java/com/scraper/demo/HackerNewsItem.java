@@ -1,17 +1,61 @@
 package com.scraper.demo;
 
-public class HackerNewsItem {
-    private String title;
-    private String info;
-    public String price;
+import org.hibernate.validator.constraints.NotBlank;
+import javax.persistence.Entity;
+import javax.persistence.*;
 
-    public HackerNewsItem(String title, String info, String price)
+@Entity
+@Table(name = "apartments")
+public class HackerNewsItem {
+
+    @Id
+    @GeneratedValue
+    private long id;
+
+    @NotBlank(message = "Must have title")
+    @Column(nullable = false)
+    private String title;
+
+    @NotBlank(message = "Must have info availability")
+    @Column(nullable = false)
+    private String info;
+
+    @NotBlank(message = "Must have price information")
+    @Column(nullable = false)
+    private String price;
+
+    @NotBlank(message = "Must have current time")
+    @Column(nullable = false)
+    private String date;
+
+
+    public HackerNewsItem(){}
+
+    public HackerNewsItem(long id, String title, String info, String price, String date)
     {
-//        super();
         this.title = title;
         this.info = info;
         this.price = price;
+        this.date = date;
     }
+//    Insert into database
+    public HackerNewsItem(String title, String info, String price, String date)
+    {
+        this.title = title;
+        this.info = info;
+        this.price = price;
+        this.date = date;
+    }
+
+//    setters and getters
+
+    public String getDate() { return date; }
+
+    public void setDate(String date) { this.date = date; }
+
+    public long getId() { return id; }
+
+    public void setId(long id) { this.id = id; }
 
     public String getPrice() { return price; }
 
