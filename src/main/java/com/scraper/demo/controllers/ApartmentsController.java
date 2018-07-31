@@ -52,12 +52,7 @@ public class ApartmentsController {
                     LocalDateTime date = LocalDateTime.now();
                     System.out.println(dtf.format(date));
 
-//                    HackerNewsItem hnItem = new HackerNewsItem(title,info, price, dtf.format(date));
                     HackerNewsItem hnItem = new HackerNewsItem(title,info,price,dtf.format(date));
-//                    hnItem.setTitle(title);
-//                    hnItem.setInfo(info);
-//                    hnItem.setPrice(price);
-//                    hnItem.setDate(dtf.format(date));
                     apartmentsRepository.save(hnItem);
 
                     model.addAttribute("apartments", apartmentsRepository.findAll());
@@ -70,7 +65,6 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return "index";
     }
 }
