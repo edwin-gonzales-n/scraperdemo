@@ -3,10 +3,13 @@ package com.scraper.demo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
+import com.scraper.demo.models.HackerNewsItem;
+import com.scraper.demo.repositories.ApartmentsRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @SpringBootApplication
 public class DemoApplication extends SpringBootServletInitializer {
+    public ApartmentsRepository apartmentsRepository;
 
     public static void main(String[] args) {
 
@@ -50,6 +54,12 @@ public class DemoApplication extends SpringBootServletInitializer {
                     System.out.println(dtf.format(date));
 
                     HackerNewsItem hnItem = new HackerNewsItem(title,info, price, dtf.format(date));
+
+                    hnItem.setTitle(title);
+                    hnItem.setInfo(info);
+                    hnItem.setPrice(price);
+                    hnItem.setDate(dtf.format(date));
+
                     ObjectMapper mapper = new ObjectMapper();
                     String jsonString = mapper.writeValueAsString(hnItem) ;
                     System.out.println(jsonString);

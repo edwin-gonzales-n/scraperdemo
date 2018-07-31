@@ -1,4 +1,4 @@
-package com.scraper.demo;
+package com.scraper.demo.models;
 
 import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.Entity;
