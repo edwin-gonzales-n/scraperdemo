@@ -5,16 +5,21 @@
 <h1>Apartment scraper dot com</h1>
     <div>
         <p>Apartment Listings</p>
-        <div>
-            <th:block th:each="apartment : ${apartments}">
-                <div th:text="'Title: ' + ${apartment.getTitle()}"></div>
-                <ul >
-                    <li th:text="'Status: ' + ${apartment.getInfo()}"></li>
-                    <li th:text="'Plan and Price: ' + ${apartment.getPrice()}"></li>
-                    <li th:text="'Date: ' + ${apartment.getDate()}"></li>
-                </ul>
-            </th:block>
-        </div>
+        <table>
+            <tr>
+                <th>Date</th>
+                <th>Title</th>
+                <th>Status</th>
+                <th>Plan and Price</th>
+            </tr>
+            <tr th:each="apartment : ${apartments}">
+                <td th:text="${apartment.getDate()}"></td>
+                <td th:text="${apartment.getTitle()}"></td>
+                <td th:text="${apartment.getInfo()}"></td>
+                <td th:text="${apartment.getPrice()}"></td>
+                    <!--<li th:text="'Date: ' + ${apartment.getDate()}"></li>-->
+            </tr>
+        </table>
     </div>
 </body>
 </html>

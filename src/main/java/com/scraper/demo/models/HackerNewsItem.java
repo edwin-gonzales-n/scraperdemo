@@ -33,6 +33,7 @@ public class HackerNewsItem {
 
     public HackerNewsItem(long id, String title, String info, String price, String date)
     {
+        this.id = id;
         this.title = title;
         this.info = info;
         this.price = price;
