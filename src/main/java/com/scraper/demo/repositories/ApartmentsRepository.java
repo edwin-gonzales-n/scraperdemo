@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApartmentsRepository extends CrudRepository<HackerNewsItem, Long> {
 //    @Query("select e from (select e from apartments order by id desc limit 12) sub order by id")
-    Iterable<HackerNewsItem> findTop12ByOrderByDateDesc();
+//    Iterable<HackerNewsItem> findTop12ByOrderByIdDesc();  //works
+    Iterable<HackerNewsItem> findTop12ByOrderByIdDesc();
 }

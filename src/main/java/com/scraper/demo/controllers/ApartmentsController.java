@@ -59,7 +59,7 @@ public class ApartmentsController {
 //                    System.out.println(jsonString);
                 }
 //                model.addAttribute("apartments", apartmentsRepository.findAll());
-                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByDateDesc());
+                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
             }
         } catch (IOException e) {
             e.printStackTrace();
