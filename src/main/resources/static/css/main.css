@@ -1,0 +1,150 @@
+body {
+    text-align: center;
+    background-color: #F4F4F4;
+    background: url("../img/bg.png") repeat;
+    padding-bottom: 4em;
+}
+
+/*styling for recaptcha on login*/
+#recaptcha{
+    transform:scale(0.77);-webkit-transform:scale(0.77);transform-origin:0 0;-webkit-transform-origin:0 0;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 100%;
+    }
+}
+
+@keyframes scale-in {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+.stay-open{
+    display: block !important;
+}
+
+.card {
+    margin-top: 16px;
+}
+
+.fade-in {
+    animation: 1.5s ease-in 0s 1 fade-in;
+}
+
+.bg-cover {
+    min-height: 100%;
+    min-width: 1024px;
+
+    width: 100%;
+    height: auto;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    z-index: -1;
+}
+
+.bg-tr-dark {
+    background: rgba(21, 21, 21, 0.7);
+}
+
+.bg-tr-dark:focus {
+    background: rgba(244, 244, 244, 0.7);
+}
+
+.blur {
+    -webkit-filter: blur(8px);
+    filter: blur(8px);
+}
+
+.card-img-top {
+    width: 100%;
+    object-fit: cover;
+}
+
+.card-img-h25 {
+    height: 25vh;
+}
+
+.card-img-h50 {
+    height: 50vh;
+}
+
+.navbar a {
+    font-family: Oswald, sans-serif;
+    transition: text-shadow .5s;
+    color: #F4F4F4 !important;
+}
+
+.navbar a:hover {
+    text-shadow: #8ab9e5 0 0 12px !important;
+}
+
+#search {
+    font-family: Oswald, sans-serif;
+}
+
+#search::placeholder {
+    color: #F4F4F4 !important;
+}
+
+#search:focus::placeholder {
+    color: #000000 !important;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#about .card-footer a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+#about a i {
+    transition: all .3s;
+}
+
+#about a:hover i {
+    text-shadow: #B0B0B0 0 3px 3px;
+    transform: scale(1.2);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    33% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+#sauce {
+    backface-visibility: hidden;
+    animation: pulse 2s infinite;
+}
