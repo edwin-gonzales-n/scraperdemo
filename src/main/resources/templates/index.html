@@ -15,23 +15,36 @@
 
 <body>
 <h1>Apartment scraper dot com</h1>
-    <div>
-        <p>Apartment Listings</p>
-        <table>
-            <tr>
-                <th>Date</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Plan and Price</th>
-            </tr>
-            <tr th:each="apartment : ${apartments}">
-                <td th:text="${apartment.getDate()}"></td>
-                <td th:text="${apartment.getTitle()}"></td>
-                <td th:text="${apartment.getInfo()}"></td>
-                <td th:text="${apartment.getPrice()}"></td>
+    <div class="container">
+        <p class="lead">Apartment Listings</p>
+        <div class="col-sm-12 col-lg-6 col-xl-12 d-flex flex-column">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Plan and Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="apartment : ${apartments}">
+                    <td th:text="${apartment.getDate()}"></td>
+                    <td th:text="${apartment.getTitle()}"></td>
+                    <td th:text="${apartment.getInfo()}"></td>
+                    <td th:text="${apartment.getPrice()}"></td>
                     <!--<li th:text="'Date: ' + ${apartment.getDate()}"></li>-->
-            </tr>
-        </table>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
+
+<div th:fragment="scripts">
+    <script th:src="@{/js/jquery-2.2.4.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+</div>
+
 </body>
 </html>
