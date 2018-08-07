@@ -62,7 +62,6 @@ public class ApartmentsController {
                     String cstdate = dateFormatGmt.format(new Date());
 
 //                    System.out.println(dateFormatLocal.parse( dateFormatGmt.format(new Date())));
-//                    System.out.println(dateFormatGmt.format(new Date()));
 
                     HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate);
                     apartmentsRepository.save(hnItem);
