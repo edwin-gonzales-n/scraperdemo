@@ -10,9 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 @Controller
 public class ApartmentsController {
@@ -51,7 +55,16 @@ public class ApartmentsController {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                     LocalDateTime date = LocalDateTime.now();
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,dtf.format(date));
+                    // convert utc to cst
+                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("CST"));
+                    SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+                    String cstdate = dateFormatGmt.format(new Date());
+
+//                    System.out.println(dateFormatLocal.parse( dateFormatGmt.format(new Date())));
+//                    System.out.println(dateFormatGmt.format(new Date()));
+
+                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate);
                     apartmentsRepository.save(hnItem);
 
 //                    ObjectMapper mapper = new ObjectMapper();

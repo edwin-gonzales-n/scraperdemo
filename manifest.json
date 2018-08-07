@@ -1,0 +1,11 @@
+{
+  "runtime": {
+    "majorVersion": "8"
+  },
+  "type": "web",
+  "command": "java -jar demo-0.0.1-SNAPSHOT.jar",
+  "notes": "Edwin's scraper version 1",
+  "mode": "rolling",
+  "healthCheck": {
+  }
+}
