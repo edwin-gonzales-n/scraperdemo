@@ -15,35 +15,53 @@
 
 <body>
 <h1>Apartment scraper dot com</h1>
-    <div class="container">
-        <p class="lead">Apartment Listings at www.2400nuecesapartments.com</p>
-        <div class="col-sm-12 col-lg-6 col-xl-12 d-flex flex-column">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">Date</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Plan and Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="apartment : ${apartments}">
-                    <td th:text="${apartment.getDate()}"></td>
-                    <td th:text="${apartment.getTitle()}"></td>
-                    <td th:text="${apartment.getInfo()}"></td>
-                    <td th:text="${apartment.getPrice()}"></td>
-                    <!--<li th:text="'Date: ' + ${apartment.getDate()}"></li>-->
-                </tr>
-                </tbody>
-            </table>
-        </div>
 
+<div id="hideMe">
+    <a onclick="getNuecesApartments()" class="btn btn-outline btn-outline-primary d-inline-block">Nueces</a>
+    <a onclick="getLakeshorePearl()" class="btn btn-outline btn-outline-primary d-inline-block">Lakeshore</a>
+    <a onclick="getLenoxBoardwalk()" class="btn btn-outline btn-outline-primary d-inline-block">Lenux Boardwalk</a>
+</div>
+
+<br/>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
+            <div class="card h-100">
+                <div id="questions"></div>
+            </div>
+        </div>
     </div>
+</div>
+
+    <!--<div class="container">-->
+        <!--<p class="lead">Apartment Listings at www.2400nuecesapartments.com</p>-->
+        <!--<div class="col-sm-12 col-lg-6 col-xl-12 d-flex flex-column">-->
+            <!--<table class="table table-striped">-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th scope="col">Date</th>-->
+                    <!--<th scope="col">Title</th>-->
+                    <!--<th scope="col">Status</th>-->
+                    <!--<th scope="col">Plan and Price</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr th:each="apartment : ${apartments}">-->
+                    <!--<td th:text="${apartment.getDate()}"></td>-->
+                    <!--<td th:text="${apartment.getTitle()}"></td>-->
+                    <!--<td th:text="${apartment.getInfo()}"></td>-->
+                    <!--<td th:text="${apartment.getPrice()}"></td>-->
+                    <!--&lt;!&ndash;<li th:text="'Date: ' + ${apartment.getDate()}"></li>&ndash;&gt;-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+        <!--</div>-->
+    <!--</div>-->
 
 <div th:fragment="scripts">
     <script th:src="@{/js/jquery-2.2.4.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
 </div>
 
 </body>

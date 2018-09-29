@@ -9,6 +9,8 @@ import com.scraper.demo.repositories.ApartmentsRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,16 +20,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-@Controller
+@RestController
 public class ApartmentsController {
+
     private final ApartmentsRepository apartmentsRepository;
 
     public ApartmentsController(ApartmentsRepository apartmentsRepository) {
         this.apartmentsRepository = apartmentsRepository;
     }
 
-    @GetMapping("/")
-    public String showAll(Model model) {
+    @GetMapping("/nuecesapartments")
+    public Iterable<HackerNewsItem> showNuecesApartment() {
 
         String baseUrl = "http://www.2400nuecesapartments.com/Floor-Plans/";
         WebClient client = new WebClient();
@@ -71,11 +74,11 @@ public class ApartmentsController {
 //                    System.out.println(jsonString);
                 }
 //                model.addAttribute("apartments", apartmentsRepository.findAll());
-                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
+//                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "index";
+        return apartmentsRepository.findTop12ByOrderByIdDesc();
     }
 }
