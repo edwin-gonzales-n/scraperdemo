@@ -2,10 +2,14 @@ package com.scraper.demo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlUrlInput;
 import com.scraper.demo.models.HackerNewsItem;
 import com.scraper.demo.repositories.ApartmentsRepository;
+import com.sun.jndi.toolkit.url.Uri;
+import com.sun.jndi.toolkit.url.UrlUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -66,8 +70,8 @@ public class ApartmentsController {
 
 //                    System.out.println(dateFormatLocal.parse( dateFormatGmt.format(new Date())));
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate);
-                    apartmentsRepository.save(hnItem);
+//                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate);
+//                    apartmentsRepository.save(hnItem);
 
 //                    ObjectMapper mapper = new ObjectMapper();
 //                    String jsonString = mapper.writeValueAsString(hnItem) ;
@@ -109,14 +113,16 @@ public class ApartmentsController {
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]")).asText().replaceAll("\\n"," ");
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
+                    String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/a[contains(@class,'btn btn-default btn-block')]/@href")).getValue();
+                    String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
                     // convert utc to cst
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
                     String cstdate = dateFormatGmt.format(new Date());
 
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
-                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n", title, pricing, info, cstdate);
-                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate);
+                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
+                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,completeUrl);
                         apartmentsRepository.save(hnItem);
                     }
                     counter++;

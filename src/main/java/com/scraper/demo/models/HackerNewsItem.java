@@ -28,27 +28,40 @@ public class HackerNewsItem {
     @Column(nullable = false)
     private String date;
 
+    @NotBlank(message = "Must have current url")
+    @Column(nullable = false)
+    private String url;
+
 
     public HackerNewsItem(){}
 
-    public HackerNewsItem(long id, String title, String availability, String price, String date)
+    public HackerNewsItem(long id, String title, String availability, String price, String date, String url)
     {
         this.id = id;
         this.title = title;
         this.availability = availability;
         this.price = price;
         this.date = date;
+        this.url = url;
     }
 //    Insert into database
-    public HackerNewsItem(String title, String availability, String price, String date)
+    public HackerNewsItem(String title, String availability, String price, String date, String url)
     {
         this.title = title;
         this.availability = availability;
         this.price = price;
         this.date = date;
+        this.url = url;
     }
 
 //    setters and getters
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public String getDate() { return date; }
 
