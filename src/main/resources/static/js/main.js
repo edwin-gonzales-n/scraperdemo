@@ -8,6 +8,12 @@ function getNuecesApartments(){
     console.log("This is the scraperObject"+scraperObject);
 }
 
+function getLakeshorePearl() {
+    $.get('/lakeshore-pearl', function (scrapedData) {
+        console.log("this worked")
+    });
+}
+
 function sortData() {
     for (let i = 0; i < scraperObject.length; i--){
         console.log("This is a test" + scraperObject[i].title);

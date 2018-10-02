@@ -81,4 +81,44 @@ public class ApartmentsController {
         }
         return apartmentsRepository.findTop12ByOrderByIdDesc();
     }
+
+    @GetMapping("/lakeshore-pearl")
+    public Iterable<HackerNewsItem> showPearlShore() {
+
+        System.out.println("looking for website");
+        String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
+        System.out.println("Website pinged");
+        WebClient client = new WebClient();
+        System.out.println("WebClient object instantiated");
+        client.getOptions().setCssEnabled(false);
+        System.out.println("CSS disabled");
+        client.getOptions().setJavaScriptEnabled(false);
+        System.out.println("JS Disabled");
+        try {
+            HtmlPage page = client.getPage(baseUrl);
+            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
+            List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'col-lg-4 col-sm-6 col-xs-12 floorplan item')]");
+            System.out.println("page.getByXPath executed");
+            System.out.println(itemList);
+
+            if(itemList.isEmpty()){
+                System.out.println("No item found");
+            }else{
+                int counter=1;
+                for(HtmlElement htmlItem : itemList){
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]")).asText().replaceAll("\\n"," ");
+                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
+                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
+
+                    if (!pricing.contains("Inquire") && !info.contains("Inquire")){
+                        System.out.printf("Dimensions: %s\n%s\n%s\n", title, pricing, info);
+                    }
+                    counter++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return apartmentsRepository.findTop12ByOrderByIdDesc();
+    }
 }
