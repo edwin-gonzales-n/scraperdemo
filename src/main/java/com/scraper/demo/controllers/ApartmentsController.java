@@ -59,7 +59,7 @@ public class ApartmentsController {
                     LocalDateTime date = LocalDateTime.now();
 
                     // convert utc to cst
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
+                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
                     dateFormatGmt.setTimeZone(TimeZone.getTimeZone("CST"));
                     SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
                     String cstdate = dateFormatGmt.format(new Date());
@@ -110,8 +110,14 @@ public class ApartmentsController {
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
 
+                    // convert utc to cst
+                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+                    String cstdate = dateFormatGmt.format(new Date());
+
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
-                        System.out.printf("Dimensions: %s\n%s\n%s\n", title, pricing, info);
+                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n", title, pricing, info, cstdate);
+                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate);
+                        apartmentsRepository.save(hnItem);
                     }
                     counter++;
                 }
@@ -119,6 +125,6 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop12ByOrderByIdDesc();
+        return apartmentsRepository.findTop9ByOrderByIdAsc();
     }
 }

@@ -10,4 +10,6 @@ public interface ApartmentsRepository extends CrudRepository<HackerNewsItem, Lon
 //    @Query("select e from (select e from apartments order by id desc limit 12) sub order by id")
 //    Iterable<HackerNewsItem> findTop12ByOrderByIdDesc();  //works
     Iterable<HackerNewsItem> findTop12ByOrderByIdDesc();
+    Iterable<HackerNewsItem> findTop9ByOrderByIdAsc();
+
 }

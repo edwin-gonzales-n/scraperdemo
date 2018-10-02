@@ -16,11 +16,11 @@ public class HackerNewsItem {
     @Column(nullable = false)
     private String title;
 
-    @NotBlank(message = "Must have info availability")
+    @NotBlank(message = "Must have availability availability")
     @Column(nullable = false)
-    private String info;
+    private String availability;
 
-    @NotBlank(message = "Must have price information")
+    @NotBlank(message = "Must have price availabilityrmation")
     @Column(nullable = false)
     private String price;
 
@@ -31,19 +31,19 @@ public class HackerNewsItem {
 
     public HackerNewsItem(){}
 
-    public HackerNewsItem(long id, String title, String info, String price, String date)
+    public HackerNewsItem(long id, String title, String availability, String price, String date)
     {
         this.id = id;
         this.title = title;
-        this.info = info;
+        this.availability = availability;
         this.price = price;
         this.date = date;
     }
 //    Insert into database
-    public HackerNewsItem(String title, String info, String price, String date)
+    public HackerNewsItem(String title, String availability, String price, String date)
     {
         this.title = title;
-        this.info = info;
+        this.availability = availability;
         this.price = price;
         this.date = date;
     }
@@ -62,12 +62,12 @@ public class HackerNewsItem {
 
     public void setPrice(String price) { this.price = price; }
 
-    public String getInfo() {
-        return info;
+    public String getAvailability() {
+        return availability;
     }
 
-    public void setInfo(String info) {
-        this.info = info;
+    public void setAvailability(String availability) {
+        this.availability = availability;
     }
 
     public String getTitle() {
