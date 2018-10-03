@@ -133,4 +133,55 @@ public class ApartmentsController {
         }
         return apartmentsRepository.findTop9ByOrderByIdAsc();
     }
+
+    @GetMapping("/azulapartments")
+    public Iterable<HackerNewsItem> showAzulApartments() {
+
+        System.out.println("looking for website");
+        String baseUrl = "https://azullakeshore.com/floorplans/";
+        System.out.println("Website pinged");
+        WebClient client = new WebClient();
+        System.out.println("WebClient object instantiated");
+        client.getOptions().setCssEnabled(false);
+        System.out.println("CSS disabled");
+        client.getOptions().setJavaScriptEnabled(false);
+        System.out.println("JS Disabled");
+        try {
+            HtmlPage page = client.getPage(baseUrl);
+            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
+//            System.out.println(page.asXml());
+            List<HtmlElement> itemList = page.getByXPath("//a[contains(@class,'floorplan')]");
+            System.out.println("page.getByXPath executed");
+            System.out.println(itemList);
+
+            if(itemList.isEmpty()){
+                System.out.println("No item found");
+            }else{
+                int counter=1;
+                for(HtmlElement htmlItem : itemList){
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
+                    System.out.println(title);
+//                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
+//                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
+                    String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
+                    System.out.println(url);
+//                    String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
+
+                    // convert utc to cst
+                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+                    String cstdate = dateFormatGmt.format(new Date());
+
+//                    if (!pricing.contains("Inquire") && !info.contains("Inquire")){
+//                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
+//                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,completeUrl);
+//                        apartmentsRepository.save(hnItem);
+//                    }
+                    counter++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return apartmentsRepository.findTop9ByOrderByIdAsc();
+    }
 }
