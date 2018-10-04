@@ -1,6 +1,7 @@
 package com.scraper.demo.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
@@ -172,6 +173,50 @@ public class ApartmentsController {
                     counter++;
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return apartmentsRepository.findTop16ByOrderByIdDesc();
+    }
+
+    @GetMapping("/lenox-boardwalk")
+    public Iterable<HackerNewsItem> showLenoxApartments() {
+
+        String baseUrl = "https://www.lenoxboardwalk.com/floorplans/";
+        WebClient client = new WebClient(BrowserVersion.CHROME);
+        client.getOptions().setCssEnabled(false);
+        client.getOptions().setJavaScriptEnabled(false);
+
+        try {
+            HtmlPage page = client.getPage(baseUrl);
+            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
+            System.out.println(page.asXml());
+//            List<HtmlElement> itemList = page.getByXPath("//a[contains(@class,'floorplan')]");
+//            System.out.println("page.getByXPath executed");
+//            System.out.println(itemList);
+//
+//            if(itemList.isEmpty()){
+//                System.out.println("No item found");
+//            }else{
+//                int counter=1;
+//                String pricing = "Must inquire on-site";
+//                String info = "Must inquire on-site";
+//
+//                for(HtmlElement htmlItem : itemList){
+//                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
+//                    System.out.println(title);
+//                    String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
+//                    System.out.println(url);
+//
+//                    // convert utc to cst
+//                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+//                    String cstdate = dateFormatGmt.format(new Date());
+//
+//                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
+//                    apartmentsRepository.save(hnItem);
+//                    counter++;
+//                }
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
