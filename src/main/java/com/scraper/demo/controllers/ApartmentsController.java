@@ -47,6 +47,7 @@ public class ApartmentsController {
                 System.out.println("No item found");
             }else{
                 int counter=1;
+                String url = "No url available";
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-title')]")).asText();
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-avil')]")).asText();
@@ -68,15 +69,10 @@ public class ApartmentsController {
                     SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
                     String cstdate = dateFormatGmt.format(new Date());
 
-//                    System.out.println(dateFormatLocal.parse( dateFormatGmt.format(new Date())));
-
-//                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate);
-//                    apartmentsRepository.save(hnItem);
-
-//                    ObjectMapper mapper = new ObjectMapper();
-//                    String jsonString = mapper.writeValueAsString(hnItem) ;
-//                    System.out.println(jsonString);
+                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate,url);
+                    apartmentsRepository.save(hnItem);
                 }
+                // use when not using RestController
 //                model.addAttribute("apartments", apartmentsRepository.findAll());
 //                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
             }
@@ -131,7 +127,7 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop9ByOrderByIdAsc();
+        return apartmentsRepository.findTop9ByOrderByIdDesc();
     }
 
     @GetMapping("/azulapartments")
@@ -158,30 +154,27 @@ public class ApartmentsController {
                 System.out.println("No item found");
             }else{
                 int counter=1;
+                String pricing = "Must inquire on-site";
+                String info = "Must inquire on-site";
+
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
                     System.out.println(title);
-//                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
-//                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
                     System.out.println(url);
-//                    String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
                     // convert utc to cst
                     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
                     String cstdate = dateFormatGmt.format(new Date());
 
-//                    if (!pricing.contains("Inquire") && !info.contains("Inquire")){
-//                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
-//                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,completeUrl);
-//                        apartmentsRepository.save(hnItem);
-//                    }
+                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
+                    apartmentsRepository.save(hnItem);
                     counter++;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop9ByOrderByIdAsc();
+        return apartmentsRepository.findTop16ByOrderByIdDesc();
     }
 }
