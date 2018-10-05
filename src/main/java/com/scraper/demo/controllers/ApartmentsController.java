@@ -3,10 +3,8 @@ package com.scraper.demo.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomAttr;
-import com.gargoylesoftware.htmlunit.html.HtmlElement;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlUrlInput;
+import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
 import com.scraper.demo.models.HackerNewsItem;
 import com.scraper.demo.repositories.ApartmentsRepository;
 import com.sun.jndi.toolkit.url.Uri;
@@ -16,7 +14,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -33,6 +33,10 @@ public class ApartmentsController {
     public ApartmentsController(ApartmentsRepository apartmentsRepository) {
         this.apartmentsRepository = apartmentsRepository;
     }
+
+    // convert utc to cst
+    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+    String cstdate = dateFormatGmt.format(new Date());
 
     @GetMapping("/nuecesapartments")
     public Iterable<HackerNewsItem> showNuecesApartment() {
@@ -113,10 +117,6 @@ public class ApartmentsController {
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/a[contains(@class,'btn btn-default btn-block')]/@href")).getValue();
                     String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
-                    // convert utc to cst
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-                    String cstdate = dateFormatGmt.format(new Date());
-
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
                         System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
                         HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,completeUrl);
@@ -164,10 +164,6 @@ public class ApartmentsController {
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
                     System.out.println(url);
 
-                    // convert utc to cst
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-                    String cstdate = dateFormatGmt.format(new Date());
-
                     HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
                     apartmentsRepository.save(hnItem);
                     counter++;
@@ -182,44 +178,59 @@ public class ApartmentsController {
     @GetMapping("/lenox-boardwalk")
     public Iterable<HackerNewsItem> showLenoxApartments() {
 
-        String baseUrl = "https://www.lenoxboardwalk.com/floorplans/";
-        WebClient client = new WebClient(BrowserVersion.CHROME);
+//        String baseUrl = "https://www.lenoxboardwalk.com/floorplans/";
+        WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
 
         try {
-            HtmlPage page = client.getPage(baseUrl);
-            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
-            System.out.println(page.asXml());
-//            List<HtmlElement> itemList = page.getByXPath("//a[contains(@class,'floorplan')]");
-//            System.out.println("page.getByXPath executed");
-//            System.out.println(itemList);
-//
-//            if(itemList.isEmpty()){
-//                System.out.println("No item found");
-//            }else{
-//                int counter=1;
-//                String pricing = "Must inquire on-site";
-//                String info = "Must inquire on-site";
-//
-//                for(HtmlElement htmlItem : itemList){
-//                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
-//                    System.out.println(title);
-//                    String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
-//                    System.out.println(url);
-//
-//                    // convert utc to cst
-//                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-//                    String cstdate = dateFormatGmt.format(new Date());
-//
-//                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
-//                    apartmentsRepository.save(hnItem);
-//                    counter++;
-//                }
+            HtmlPage page = client.getPage("http://localhost:8080/");
+//            JavaScriptJobManager manager = page.getEnclosingWindow().getJobManager();
+//            while (manager.getJobCount() > 0){
+//                Thread.sleep(500);
 //            }
+
+//            String htmlContent = page.asXml();
+//            File htmlFile = new File("/Users/eogonzal/IdeaProjects/Scraper_demo/lenox-boardwalk.html");
+//            PrintWriter pw = new PrintWriter(htmlFile);
+//            pw.print(htmlContent);
+//            pw.close();
+//
+//            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
+//            System.out.println(page.asXml());
+
+            List<HtmlElement> itemList = page.getByXPath("//ul[contains(@id,'floorplan_slider_list')]/li");
+            System.out.println("page.getByXPath executed");
+            System.out.println("This is the itemList: " + itemList);
+
+            if(itemList.isEmpty()){
+                System.out.println("No item found");
+            }
+            else{
+                int counter=1;
+                String info = "Must inquire on-site";
+                String url  =  "https://www.lenoxboardwalk.com/floorplans/";
+
+                for(HtmlElement htmlItem : itemList){
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
+                            .asText().replaceAll("\\n"," ").replaceAll("Rent.*$","");
+                    System.out.println(title);
+                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
+                            .asText().replaceAll("\\n"," ").replaceAll(".*Rent ","");
+                    System.out.println(pricing);
+
+                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
+                    apartmentsRepository.save(hnItem);
+
+                    counter++;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+//        catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         return apartmentsRepository.findTop16ByOrderByIdDesc();
     }
 }

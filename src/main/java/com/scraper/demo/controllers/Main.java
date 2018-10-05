@@ -8,6 +8,7 @@ public class Main {
 
     @GetMapping("/")
     public String apartmentController(){
-        return "index";
+//        return "index";
+        return "lenox-boardwalk";
     }
 }
