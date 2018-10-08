@@ -1,23 +1,14 @@
 package com.scraper.demo.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.*;
-import com.gargoylesoftware.htmlunit.javascript.background.JavaScriptJobManager;
-import com.scraper.demo.models.HackerNewsItem;
+import com.scraper.demo.models.apartments;
 import com.scraper.demo.repositories.ApartmentsRepository;
-import com.sun.jndi.toolkit.url.Uri;
-import com.sun.jndi.toolkit.url.UrlUtil;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,9 +29,12 @@ public class ApartmentsController {
     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
     String cstdate = dateFormatGmt.format(new Date());
 
-    @GetMapping("/nuecesapartments")
-    public Iterable<HackerNewsItem> showNuecesApartment() {
+    long property_id;
 
+    @GetMapping("/nuecesapartments")
+    public Iterable<apartments> showNuecesApartment() {
+
+        property_id=1;
         String baseUrl = "http://www.2400nuecesapartments.com/Floor-Plans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -53,6 +47,7 @@ public class ApartmentsController {
             }else{
                 int counter=1;
                 String url = "No url available";
+
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-title')]")).asText();
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-avil')]")).asText();
@@ -74,7 +69,7 @@ public class ApartmentsController {
                     SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
                     String cstdate = dateFormatGmt.format(new Date());
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title,info,price,cstdate,url);
+                    apartments hnItem = new apartments(title,info,price,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
                 }
                 // use when not using RestController
@@ -88,8 +83,9 @@ public class ApartmentsController {
     }
 
     @GetMapping("/lakeshore-pearl")
-    public Iterable<HackerNewsItem> showPearlShore() {
+    public Iterable<apartments> showPearlShore() {
 
+        property_id=2;
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -117,7 +113,7 @@ public class ApartmentsController {
 
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
                         System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
-                        HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,completeUrl);
+                        apartments hnItem = new apartments(title,info,pricing,cstdate,completeUrl,property_id);
                         apartmentsRepository.save(hnItem);
                     }
                     counter++;
@@ -130,8 +126,9 @@ public class ApartmentsController {
     }
 
     @GetMapping("/azulapartments")
-    public Iterable<HackerNewsItem> showAzulApartments() {
+    public Iterable<apartments> showAzulApartments() {
 
+        property_id=3;
         String baseUrl = "https://azullakeshore.com/floorplans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -159,7 +156,7 @@ public class ApartmentsController {
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
                     System.out.println(url);
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
+                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
                     counter++;
                 }
@@ -171,8 +168,9 @@ public class ApartmentsController {
     }
 
     @GetMapping("/lenox-boardwalk")
-    public Iterable<HackerNewsItem> showLenoxApartments() {
+    public Iterable<apartments> showLenoxApartments() {
 
+        property_id=4;
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -202,7 +200,7 @@ public class ApartmentsController {
                     System.out.println(info);
                     System.out.println(url);
 
-                    HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
+                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
 
                     counter++;

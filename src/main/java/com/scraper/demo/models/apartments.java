@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "apartments")
-public class HackerNewsItem {
+public class apartments {
 
     @Id
     @GeneratedValue
@@ -32,10 +32,14 @@ public class HackerNewsItem {
     @Column(nullable = false)
     private String url;
 
+    @NotBlank(message = "Must have property_id")
+    @Column(nullable = false)
+    private long property_id;
 
-    public HackerNewsItem(){}
 
-    public HackerNewsItem(long id, String title, String availability, String price, String date, String url)
+    public apartments(){}
+
+    public apartments(long id, String title, String availability, String price, String date, String url, long property_id)
     {
         this.id = id;
         this.title = title;
@@ -43,18 +47,28 @@ public class HackerNewsItem {
         this.price = price;
         this.date = date;
         this.url = url;
+        this.property_id=property_id;
     }
 //    Insert into database
-    public HackerNewsItem(String title, String availability, String price, String date, String url)
+    public apartments(String title, String availability, String price, String date, String url, long property_id)
     {
         this.title = title;
         this.availability = availability;
         this.price = price;
         this.date = date;
         this.url = url;
+        this.property_id = property_id;
     }
 
 //    setters and getters
+    public long getProperty_id() {
+        return property_id;
+    }
+
+    public void setProperty_id(long property_id) {
+        this.property_id = property_id;
+    }
+
     public String getUrl() {
         return url;
     }
