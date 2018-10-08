@@ -90,31 +90,29 @@ public class ApartmentsController {
     @GetMapping("/lakeshore-pearl")
     public Iterable<HackerNewsItem> showPearlShore() {
 
-        System.out.println("looking for website");
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
-        System.out.println("Website pinged");
         WebClient client = new WebClient();
-        System.out.println("WebClient object instantiated");
         client.getOptions().setCssEnabled(false);
-        System.out.println("CSS disabled");
         client.getOptions().setJavaScriptEnabled(false);
-        System.out.println("JS Disabled");
+
         try {
             HtmlPage page = client.getPage(baseUrl);
-            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
             List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'col-lg-4 col-sm-6 col-xs-12 floorplan item')]");
-            System.out.println("page.getByXPath executed");
-            System.out.println(itemList);
 
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
                 int counter=1;
+
                 for(HtmlElement htmlItem : itemList){
-                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]")).asText().replaceAll("\\n"," ");
-                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]")).asText().replaceAll("\\n"," ");
-                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]")).asText().replaceAll("\\n"," ");
-                    String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/a[contains(@class,'btn btn-default btn-block')]/@href")).getValue();
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]"))
+                            .asText().replaceAll("\\n"," ");
+                    String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]"))
+                            .asText().replaceAll("\\n"," ");
+                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]"))
+                            .asText().replaceAll("\\n"," ");
+                    String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/a[contains(@class,'btn btn-default btn-block')]/@href"))
+                            .getValue();
                     String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
@@ -134,15 +132,11 @@ public class ApartmentsController {
     @GetMapping("/azulapartments")
     public Iterable<HackerNewsItem> showAzulApartments() {
 
-        System.out.println("looking for website");
         String baseUrl = "https://azullakeshore.com/floorplans/";
-        System.out.println("Website pinged");
         WebClient client = new WebClient();
-        System.out.println("WebClient object instantiated");
         client.getOptions().setCssEnabled(false);
-        System.out.println("CSS disabled");
         client.getOptions().setJavaScriptEnabled(false);
-        System.out.println("JS Disabled");
+
         try {
             HtmlPage page = client.getPage(baseUrl);
             System.out.println("HtmlPage executed, next is List HtmlElement itemList");
@@ -155,6 +149,7 @@ public class ApartmentsController {
                 System.out.println("No item found");
             }else{
                 int counter=1;
+
                 String pricing = "Must inquire on-site";
                 String info = "Must inquire on-site";
 
@@ -178,26 +173,12 @@ public class ApartmentsController {
     @GetMapping("/lenox-boardwalk")
     public Iterable<HackerNewsItem> showLenoxApartments() {
 
-//        String baseUrl = "https://www.lenoxboardwalk.com/floorplans/";
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
 
         try {
             HtmlPage page = client.getPage("http://localhost:8080/");
-//            JavaScriptJobManager manager = page.getEnclosingWindow().getJobManager();
-//            while (manager.getJobCount() > 0){
-//                Thread.sleep(500);
-//            }
-
-//            String htmlContent = page.asXml();
-//            File htmlFile = new File("/Users/eogonzal/IdeaProjects/Scraper_demo/lenox-boardwalk.html");
-//            PrintWriter pw = new PrintWriter(htmlFile);
-//            pw.print(htmlContent);
-//            pw.close();
-//
-//            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
-//            System.out.println(page.asXml());
 
             List<HtmlElement> itemList = page.getByXPath("//ul[contains(@id,'floorplan_slider_list')]/li");
             System.out.println("page.getByXPath executed");
@@ -214,10 +195,12 @@ public class ApartmentsController {
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll("Rent.*$","");
-                    System.out.println(title);
+                    System.out.println(counter + ") " + title);
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll(".*Rent ","");
                     System.out.println(pricing);
+                    System.out.println(info);
+                    System.out.println(url);
 
                     HackerNewsItem hnItem = new HackerNewsItem(title,info,pricing,cstdate,url);
                     apartmentsRepository.save(hnItem);
@@ -228,9 +211,6 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-        return apartmentsRepository.findTop16ByOrderByIdDesc();
+        return apartmentsRepository.findTop13ByOrderByIdAsc();
     }
 }

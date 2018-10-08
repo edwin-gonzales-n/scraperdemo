@@ -12,5 +12,6 @@ public interface ApartmentsRepository extends CrudRepository<HackerNewsItem, Lon
     Iterable<HackerNewsItem> findTop12ByOrderByIdDesc();
     Iterable<HackerNewsItem> findTop9ByOrderByIdDesc();
     Iterable<HackerNewsItem> findTop16ByOrderByIdDesc();
+    Iterable<HackerNewsItem> findTop13ByOrderByIdAsc();
 
 }
