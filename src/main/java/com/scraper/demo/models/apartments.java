@@ -32,7 +32,6 @@ public class apartments {
     @Column(nullable = false)
     private String url;
 
-    @NotBlank(message = "Must have property_id")
     @Column(nullable = false)
     private long property_id;
 

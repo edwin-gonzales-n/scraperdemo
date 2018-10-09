@@ -24,17 +24,14 @@ public class ApartmentsController {
     public ApartmentsController(ApartmentsRepository apartmentsRepository) {
         this.apartmentsRepository = apartmentsRepository;
     }
-
     // convert utc to cst
     SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
     String cstdate = dateFormatGmt.format(new Date());
 
-    long property_id;
-
     @GetMapping("/nuecesapartments")
     public Iterable<apartments> showNuecesApartment() {
 
-        property_id=1;
+        long property_id=1;
         String baseUrl = "http://www.2400nuecesapartments.com/Floor-Plans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -50,27 +47,14 @@ public class ApartmentsController {
 
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-title')]")).asText();
+                    System.out.println("This is the property_id" + property_id);
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-avil')]")).asText();
                     String price = ((HtmlElement) htmlItem.getFirstByXPath("./p[contains(text(),'Starting')]")).asText();
                     System.out.printf("%d. Title: %s\nInfo: %s\nDimensions & Price: %s\n\n", counter, title, info, price);
-                    counter++;
-                }
-                for(HtmlElement htmlItem : itemList){
-                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-title')]")).asText();
-                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-avil')]")).asText();
-                    String price = ((HtmlElement) htmlItem.getFirstByXPath("./p[contains(text(),'Starting')]")).asText();
-
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                    LocalDateTime date = LocalDateTime.now();
-
-                    // convert utc to cst
-                    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-                    dateFormatGmt.setTimeZone(TimeZone.getTimeZone("CST"));
-                    SimpleDateFormat dateFormatLocal = new SimpleDateFormat("yyyy-MMM-dd HH:mm:ss");
-                    String cstdate = dateFormatGmt.format(new Date());
 
                     apartments hnItem = new apartments(title,info,price,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
+                    counter++;
                 }
                 // use when not using RestController
 //                model.addAttribute("apartments", apartmentsRepository.findAll());
@@ -79,13 +63,13 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop12ByOrderByIdDesc();
+        return apartmentsRepository.findapartmentsByProperty_Id(property_id);
     }
 
     @GetMapping("/lakeshore-pearl")
     public Iterable<apartments> showPearlShore() {
 
-        property_id=2;
+        long property_id=2;
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -101,6 +85,7 @@ public class ApartmentsController {
                 int counter=1;
 
                 for(HtmlElement htmlItem : itemList){
+                    System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]"))
                             .asText().replaceAll("\\n"," ");
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]"))
@@ -122,13 +107,13 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop9ByOrderByIdDesc();
+        return apartmentsRepository.findapartmentsByProperty_Id(property_id);
     }
 
     @GetMapping("/azulapartments")
     public Iterable<apartments> showAzulApartments() {
 
-        property_id=3;
+        long property_id=3;
         String baseUrl = "https://azullakeshore.com/floorplans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -151,6 +136,7 @@ public class ApartmentsController {
                 String info = "Must inquire on-site";
 
                 for(HtmlElement htmlItem : itemList){
+                    System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
                     System.out.println(title);
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
@@ -164,13 +150,13 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop16ByOrderByIdDesc();
+        return apartmentsRepository.findapartmentsByProperty_Id(property_id);
     }
 
     @GetMapping("/lenox-boardwalk")
     public Iterable<apartments> showLenoxApartments() {
 
-        property_id=4;
+        long property_id=4;
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -191,6 +177,7 @@ public class ApartmentsController {
                 String url  =  "https://www.lenoxboardwalk.com/floorplans/";
 
                 for(HtmlElement htmlItem : itemList){
+                    System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll("Rent.*$","");
                     System.out.println(counter + ") " + title);
@@ -202,6 +189,7 @@ public class ApartmentsController {
 
                     apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
+                    System.out.println("done saving to DB");
 
                     counter++;
                 }
@@ -209,6 +197,6 @@ public class ApartmentsController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return apartmentsRepository.findTop13ByOrderByIdAsc();
+        return apartmentsRepository.findapartmentsByProperty_Id(property_id);
     }
 }
