@@ -9,6 +9,12 @@ public class Main {
     @GetMapping("/")
     public String apartmentController(){
 //        return "index";
-        return "lenox-boardwalk";
+//        return "lenox-boardwalk";
+        return "index";
+    }
+
+    @GetMapping("/sensors")
+    public String sensorsController(){
+        return "sensors";
     }
 }

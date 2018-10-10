@@ -14,24 +14,34 @@
 </head>
 
 <body>
-<h1>Apartment scraper dot com</h1>
+<h1>Edwin's site</h1>
 
-<div id="hideMe">
-    <a onclick="getNuecesApartments()" class="btn btn-outline btn-outline-primary d-inline-block">Nueces</a>
-    <a onclick="getLakeshorePearl()" class="btn btn-outline btn-outline-primary d-inline-block">Lakeshore</a>
-    <a onclick="getLenoxBoardwalk()" class="btn btn-outline btn-outline-primary d-inline-block">Lenux Boardwalk</a>
-</div>
+<!--<div id="hideMe">-->
+    <!--<a onclick="getNuecesApartments()" class="btn btn-outline btn-outline-primary d-inline-block">Nueces</a>-->
+    <!--<a onclick="getLakeshorePearl()" class="btn btn-outline btn-outline-primary d-inline-block">Lakeshore</a>-->
+    <!--<a onclick="getLenoxBoardwalk()" class="btn btn-outline btn-outline-primary d-inline-block">Lenux Boardwalk</a>-->
+<!--</div>-->
+
+<!--<div id="sensors">-->
+    <!--<a onclick="getTemperature1()" class="btn btn-outline btn-outline-primary d-inline-block">Temperature</a>-->
+    <!--<a onclick="getHumidity1()" class="btn btn-outline btn-outline-primary d-inline-block">Humidity</a>-->
+    <!--<a onclick="getMoisture1()" class="btn btn-outline btn-outline-primary d-inline-block">Moisture</a>-->
+<!--</div>-->
 
 <br/>
 <div class="container-fluid">
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
             <div class="card h-100">
+               <h4>Hello, this is Edwin's site, a multipurpose site used as a REST server, and other local purposes within Oracle.</h4>
+                <br/>
+                <h4>If you are in this site then you should know where to go for whatever purpose you ended up here.  If not, please close this page.</h4>
                 <div id="questions"></div>
             </div>
         </div>
     </div>
 </div>
+
 
     <!--<div class="container">-->
         <!--<p class="lead">Apartment Listings at www.2400nuecesapartments.com</p>-->
@@ -62,6 +72,7 @@
     <script th:src="@{/js/jquery-2.2.4.min.js}"></script>
     <script th:src="@{/js/bootstrap.min.js}"></script>
     <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/sensors.js}"></script>
 </div>
 
 </body>

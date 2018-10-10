@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+    <meta charset="UTF-8" name="viewport"
+          content="width=device-width, intial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title th:text="${title}"></title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{img/fabicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"/>
+</head>
+
+<body>
+<h1>Sensors Readings</h1>
+<br/>
+
+<div>
+    <h2>Sensor 1</h2>
+    <a onclick="getTemperature1()" class="btn btn-outline btn-outline-primary d-inline-block">Temperature</a>
+    <a onclick="getHumidity1()" class="btn btn-outline btn-outline-primary d-inline-block">Humidity</a>
+    <a onclick="getMoisture1()" class="btn btn-outline btn-outline-primary d-inline-block">Moisture</a>
+</div>
+<br/>
+<div>
+    <h2>Sensor 2</h2>
+    <a onclick="getTemperature2()" class="btn btn-outline btn-outline-primary d-inline-block">Temperature</a>
+    <a onclick="getHumidity2()" class="btn btn-outline btn-outline-primary d-inline-block">Humidity</a>
+</div>
+<br/>
+<div>
+    <h2>Sensor 3</h2>
+    <a onclick="getTemperature3()" class="btn btn-outline btn-outline-primary d-inline-block">Temperature</a>
+    <a onclick="getHumidity3()" class="btn btn-outline btn-outline-primary d-inline-block">Humidity</a>
+</div>
+<br/>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
+            <div class="card h-100">
+                <div id="sensor1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
+            <div class="card h-100">
+                <div id="sensor2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
+            <div class="card h-100">
+                <div id="sensor3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="scripts">
+    <script th:src="@{/js/jquery-2.2.4.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/sensors.js}"></script>
+</div>
+
+</body>
+</html>
