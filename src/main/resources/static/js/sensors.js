@@ -46,7 +46,7 @@ function getMoisture2(){
     $.get(urlMain+moisture+token2, function (data) {
         console.log(data);
         $('#sensor2').empty();
-        $('#sensor2').append('<br><h3>Moisture in Test Lab: <strong style="color: green">'+data.moisture+'</strong><span style="font-size: .5em"> (out of 1023)</span></h3>');
+        $('#sensor2').append('<br><h3>Moisture in Chemical Storage Room: <strong style="color: green">'+data.moisture+'</strong><span style="font-size: .5em"> (out of 1023)</span></h3>');
     });
 }
 
