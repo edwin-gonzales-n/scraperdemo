@@ -27,8 +27,12 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
             <div class="card h-100">
-                <div id="sensor1"></div>
-                <div id="sensor1_b"></div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div id="sensor1" class="col-5"></div>
+                    <div id="sensor1_b" class="col-5"></div>
+                    <div class="col-1"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -44,8 +48,12 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
             <div class="card h-100">
-                <div id="sensor3"></div>
-                <div id="sensor3_b"></div>
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div id="sensor3" class="col-5"></div>
+                    <div id="sensor3_b" class="col-5"></div>
+                    <div class="col-1"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -62,9 +70,11 @@
     <div class="row d-flex justify-content-center">
         <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
             <div class="card h-100">
-                <div id="sensor2"></div>
-                <div id="sensor2_b"></div>
-                <div id="sensor2_c"></div>
+                <div class="row">
+                    <div id="sensor2" class="col-4"></div>
+                    <div id="sensor2_b" class="col-4"></div>
+                    <div id="sensor2_c" class="col-4"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -77,6 +87,16 @@
     <script th:src="@{/js/sensors.js}"></script>
     <script th:src="@{/js/GaugeMeter.js}"></script>
 </div>
-
+<script>
+    $(document).ready(function() {
+        getTemperature1();
+        getHumidity1();
+        getTemperature3();
+        getHumidity3();
+        getTemperature2();
+        getHumidity2();
+        getMoisture2();
+    });
+</script>
 </body>
 </html>

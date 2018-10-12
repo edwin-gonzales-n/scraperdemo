@@ -15,6 +15,7 @@ function getTemperature1() {
         // $('#sensor1').append('<br><h3>Temperature in Test Lab: <strong style="color: green">'+data.fahrenheit_degree+'<span> &#8457;</span></strong></h3>');
         // // $('#sensor1').append('<div class="GaugeMeter" data-percent="'+data.fahrenheit_degree+'" data-label="Fahrenheit"</div>')
         displayData(1,data.fahrenheit_degree,"f");
+        // displayData(1,50,"f");
     });
 }
 
@@ -24,26 +25,8 @@ function getHumidity1() {
         $('#sensor1_b').empty();
         // $('#sensor1').append('<br><h3>Humidity in Test Lab: <strong style="color: green">'+data.humidity+' %</strong></h3>');
         displayData("1_b",data.humidity,"percent");
+        // displayData("1_b",78,"percent");
     });
-}
-
-function displayData(sensor,n,b){
-    // console.log("This is the temperature: " +n);
-    a = parseInt(n, 10);
-    if(b === "percent"){
-        let label = "Percent";
-        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="%" data-theme="LightGreen-DarkGreen"</div>');
-        $(".GaugeMeter").gaugeMeter();
-    }
-    if(b === "f"){
-        let label = "F";
-        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="'+label+'" data-theme="LightBlue-DarkBlue"</div>');
-        $(".GaugeMeter").gaugeMeter();
-    }
-    if(b === "none"){
-        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="0-1023" data-theme="Black"</div>');
-        $(".GaugeMeter").gaugeMeter();
-    }
 }
 
 function getTemperature2() {
@@ -92,4 +75,22 @@ function getTemperature3() {
         // $('#sensor3').append('<br><h3>Temperature in Production Lab: <strong style="color: green">'+data.fahrenheit_degree+'<span> &#8457;</span></strong></h3>');
         displayData(3,data.fahrenheit_degree,"f");
     });
+}
+
+function displayData(sensor,n,b){
+    a = parseInt(n, 10);
+    if(b === "percent"){
+        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="%" data-theme="LightGreen-DarkGreen"></div>');
+        $(".GaugeMeter").gaugeMeter();
+    }
+    if(b === "f"){
+        let label = "F";
+        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="'+label+'" data-theme="LightBlue-DarkBlue"></div>');
+        $(".GaugeMeter").gaugeMeter();
+    }
+    if(b === "none"){
+        $('#sensor'+sensor+'').append('<div class="GaugeMeter" data-percent="'+a+'" data-label="0-1023" data-theme="Black"></div>');
+        $(".GaugeMeter").gaugeMeter();
+    }
+    setTimeout(displayData, 5000);
 }
