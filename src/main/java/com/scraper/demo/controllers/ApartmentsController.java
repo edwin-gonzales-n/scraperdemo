@@ -162,7 +162,7 @@ public class ApartmentsController {
         client.getOptions().setJavaScriptEnabled(false);
 
         try {
-            HtmlPage page = client.getPage("http://localhost:8080/");
+            HtmlPage page = client.getPage("http://localhost:8080/fakelenox");
 
             List<HtmlElement> itemList = page.getByXPath("//ul[contains(@id,'floorplan_slider_list')]/li");
             System.out.println("page.getByXPath executed");

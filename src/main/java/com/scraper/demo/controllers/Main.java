@@ -13,7 +13,7 @@ public class Main {
     }
 
     @GetMapping("/fakelenox")
-    public String fakelenox(){
+    public String fakeLenox(){
         return "lenox-boardwalk";
     }
 
@@ -21,4 +21,11 @@ public class Main {
     public String sensorsController(){
         return "sensors";
     }
+
+    @GetMapping("/test")
+    public String testPage(){
+        return "test";
+    }
+
+
 }
