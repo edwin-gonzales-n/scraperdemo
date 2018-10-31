@@ -8,9 +8,13 @@ public class Main {
 
     @GetMapping("/")
     public String apartmentController(){
-//        return "index";
 //        return "lenox-boardwalk";
         return "index";
+    }
+
+    @GetMapping("/fakelenox")
+    public String fakelenox(){
+        return "lenox-boardwalk";
     }
 
     @GetMapping("/sensors")
