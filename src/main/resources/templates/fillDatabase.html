@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+    <meta charset="UTF-8" name="viewport"
+          content="width=device-width, intial-scale=1, maximum-scale=1, user-scalable=no"/>
+    <title th:text="${title}"></title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="shortcut icon" type="image/x-icon" th:href="@{img/fabicon.ico}"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-lg-6 col-xl-6 d-flex flex-column">
+            <div class="card h-100">
+                <h4>Done, database have been filled.</h4>
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="scripts">
+    <script th:src="@{/js/jquery-2.2.4.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/main.js}"></script>
+    <script th:src="@{/js/sensors.js}"></script>
+</div>
+</body>
+</html>
