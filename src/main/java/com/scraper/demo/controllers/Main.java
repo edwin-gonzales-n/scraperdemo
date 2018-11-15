@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Controller
 public class Main {
@@ -45,12 +47,36 @@ public class Main {
 
     @GetMapping("/filldatabase")
     public String filldatabase(){
-        getNuecesApartment();
-        getLakeShore();
-        getAzul();
-        getLenox();
+        // timer to refill database with new data everyday, once a day.
+        TimerTask repeatedTask = new TimerTask() {
+            @Override
+            public void run() {
+                apartmentsRepository.deleteAll();
+                getNuecesApartment();
+                getLakeShore();
+                getAzul();
+                getLenox();
+            }
+        };
+        Timer timer = new Timer("Timer");
+        long delay = 1000L;
+//        long period = 1000L * 60L * 60L * 24L;
+        long period = 10000L;
+        timer.scheduleAtFixedRate(repeatedTask, delay , period);
         return "fillDatabase";
     }
+
+//    @GetMapping("/filldatabase")
+//    public String filldatabase(){
+//        //cleaning database if filled.
+//        apartmentsRepository.deleteAll();
+//        //filling up database with new data
+//        getNuecesApartment();
+//        getLakeShore();
+//        getAzul();
+//        getLenox();
+//        return "fillDatabase";
+//    }
 
     // logic to fill database
     private void getNuecesApartment() {
