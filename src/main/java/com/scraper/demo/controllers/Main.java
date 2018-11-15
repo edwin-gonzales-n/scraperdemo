@@ -60,8 +60,8 @@ public class Main {
         };
         Timer timer = new Timer("Timer");
         long delay = 1000L;
-//        long period = 1000L * 60L * 60L * 24L;
-        long period = 10000L;
+        long period = 1000L * 60L * 60L * 24L;
+//        long period = 30000L;
         timer.scheduleAtFixedRate(repeatedTask, delay , period);
         return "fillDatabase";
     }
@@ -213,7 +213,7 @@ public class Main {
             else{
                 int counter=1;
                 String info = "Must inquire on-site";
-                String url  =  "https://www.lenoxboardwalk.com/floorplans/";
+//                String url  =  "https://www.lenoxboardwalk.com/floorplans/";
 
                 for(HtmlElement htmlItem : itemList){
                     System.out.println("This is the property_id" + property_id);
@@ -222,9 +222,13 @@ public class Main {
                     System.out.println(counter + ") " + title);
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll(".*Rent ","");
+                    String viewavailable = ((DomAttr) htmlItem.getFirstByXPath("./a[contains(@class,'fp-button floorplan-availability-link')]/@href"))
+                            .getValue();
+                    String url = ("https://www.lenoxboardwalk.com/floorplans/" + viewavailable);
+
                     System.out.println(pricing);
                     System.out.println(info);
-                    System.out.println(url);
+                    System.out.println("This is lenux url" +url);
 
                     apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
