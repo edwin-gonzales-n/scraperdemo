@@ -1,3 +1,10 @@
+/* Scraper app for the AR/VR Virtual Pillar team
+ * Main class
+ * This class is a @Controller type class and its function is to execute
+ * all scraping methods, then pushing them to the mysql DB.
+ * All scraping methods are programmed to fit specific websites, since all of them are different.
+ */
+
 package com.scraper.demo.controllers;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -10,13 +17,18 @@ import com.scraper.demo.repositories.ApartmentsRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+/**
+ * Entry point for this project.
+ *
+ * @author Edwin O. Gonzales
+ */
 @Controller
 public class Main {
 
@@ -26,32 +38,47 @@ public class Main {
         this.apartmentsRepository = apartmentsRepository;
     }
 
-    // convert utc to cst
-    SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
-    String cstdate = dateFormatGmt.format(new Date());
-
+    // **************************************************
+    // root
+    // **************************************************
+    //root directory.  It will open the index.html file.
     @GetMapping("/")
     public String apartmentController(){
         return "index";
     }
 
+    // **************************************************
+    // fakelenox
+    // **************************************************
+    /** Lenox Boardwalk site is extremely loaded with JS. I scraped the site after all the JS is loaded, then grabbed the html,
+     * and finally placed it in my project as a dummy page.  The app then scrapes the data from this demo page. */
     @GetMapping("/fakelenox")
     public String fakeLenox(){
         return "lenox-boardwalk";
     }
 
+    // **************************************************
+    // sensors
+    // **************************************************
+    /** I created sensors for our class project using the IoT sensors.  It is all JS, and not relevant to the main scraping project. */
     @GetMapping("/sensors")
     public String sensorsController(){
         return "sensors";
     }
 
+    // **************************************************
+    // filldatabase
+    // **************************************************
+    /**  The filldatabase method calls the scraper methods and fills the database.
+     *   It is wrapped around a timer that makes the method run once a day.
+     *   Every time the method is called, it first clean the table 'apartments' in the DB.*/
     @GetMapping("/filldatabase")
     public String filldatabase(){
         // timer to refill database with new data everyday, once a day.
         TimerTask repeatedTask = new TimerTask() {
             @Override
             public void run() {
-                apartmentsRepository.deleteAll();
+                apartmentsRepository.truncateApartmentsTable();
                 getNuecesApartment();
                 getLakeShore();
                 getAzul();
@@ -66,21 +93,33 @@ public class Main {
         return "fillDatabase";
     }
 
-//    @GetMapping("/filldatabase")
-//    public String filldatabase(){
-//        //cleaning database if filled.
-//        apartmentsRepository.deleteAll();
-//        //filling up database with new data
-//        getNuecesApartment();
-//        getLakeShore();
-//        getAzul();
-//        getLenox();
-//        return "fillDatabase";
-//    }
+    // method below 'filldatabase' was created before adding the timer for once a day execution.
+    /*
+    @GetMapping("/filldatabase")
+    public String filldatabase(){
+        //cleaning database if filled.
+        apartmentsRepository.deleteAll();
+        //filling up database with new data
+        getNuecesApartment();
+        getLakeShore();
+        getAzul();
+        getLenox();
+        return "fillDatabase";
+    }
+    */
 
-    // logic to fill database
+    // **************************************************
+    // Scrapers and logic to fill database
+    // **************************************************
+    /**
+     *
+     * The current value will be 0.
+     */
     private void getNuecesApartment() {
         long property_id=1;
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+        String cstdate = dateFormatGmt.format(new Date());
+
         String baseUrl = "http://www.2400nuecesapartments.com/Floor-Plans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -116,6 +155,9 @@ public class Main {
 
     private void getLakeShore(){
         long property_id=2;
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+        String cstdate = dateFormatGmt.format(new Date());
+
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -157,6 +199,9 @@ public class Main {
 
     private void getAzul(){
         long property_id=3;
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+        String cstdate = dateFormatGmt.format(new Date());
+
         String baseUrl = "https://azullakeshore.com/floorplans/";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
@@ -196,6 +241,9 @@ public class Main {
 
     private void getLenox(){
         long property_id=4;
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+        String cstdate = dateFormatGmt.format(new Date());
+
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -241,5 +289,17 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    /*
+    private void getAlexan(){
+    //https://alexane6.com/floor-plans/
+    }
+    private void getEastSide(){
+    //https://eastsidestationapts.com/floor-plans
+    }
+    private void get7east(){
+    https://www.7eastaustin.com/Floor-plans.aspx
+    }
+     */
 
 }
