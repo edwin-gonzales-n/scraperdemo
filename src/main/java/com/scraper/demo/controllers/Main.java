@@ -12,6 +12,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.scraper.demo.models.amenity;
 import com.scraper.demo.models.apartments;
 import com.scraper.demo.repositories.ApartmentsRepository;
 import org.springframework.stereotype.Controller;
@@ -20,10 +21,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
 /**
  * Entry point for this project.
  *
@@ -79,10 +78,10 @@ public class Main {
             @Override
             public void run() {
                 apartmentsRepository.truncateApartmentsTable();
-                getNuecesApartment();
+//                getNuecesApartment();
                 getLakeShore();
-                getAzul();
-                getLenox();
+//                getAzul();
+//                getLenox();
             }
         };
         Timer timer = new Timer("Timer");
@@ -115,6 +114,8 @@ public class Main {
      *
      * The current value will be 0.
      */
+
+ /*
     private void getNuecesApartment() {
         long property_id=1;
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
@@ -152,13 +153,14 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+*/
     private void getLakeShore(){
         long property_id=2;
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
+        String location = "30.242056, -97.723472";
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -173,22 +175,40 @@ public class Main {
                 int counter=1;
 
                 for(HtmlElement htmlItem : itemList){
-                    System.out.println("This is the property_id" + property_id);
+                    ArrayList<String> amenitiesList = new ArrayList<>();
+
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]"))
                             .asText().replaceAll("\\n"," ");
+
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]"))
-                            .asText().replaceAll("\\n"," ");
+                            .asText().replaceAll("\\n"," ").replaceAll(".*Pricing:","");
+
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'col-xs-8')]"))
                             .asText().replaceAll("\\n"," ");
+
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/a[contains(@class,'btn btn-default btn-block')]/@href"))
                             .getValue();
+
                     String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
-                    if (!pricing.contains("Inquire") && !info.contains("Inquire")){
-                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
-                        apartments hnItem = new apartments(title,info,pricing,cstdate,completeUrl,property_id);
-                        apartmentsRepository.save(hnItem);
+                    HtmlPage secondPage = client.getPage(completeUrl);
+                    String floorPlanImage = ((DomAttr) secondPage.getFirstByXPath("//img[contains(@class, 'img-responsive center-block')]/@src")).getValue();
+                    //arraylist for amenities
+                    List<HtmlElement> amenities = secondPage.getByXPath("//li[contains(@class,'col-sm-6')]");
+
+
+                    for(HtmlElement amenity : amenities){
+                        String addAmenity = ((HtmlElement) amenity.getFirstByXPath("./p")).asText();
+                        amenitiesList.add(String.format("\"%s\"", addAmenity));
                     }
+
+                    if (!pricing.contains("Inquire") && !info.contains("Inquire")){
+                        System.out.printf("Title: %s\nPrice: %s\nAvailable: %s\nDate pulled: %s\nUrl: %s\nFloorplan: %s\nAmenities: %s\nLocation: %s\nProperty ID: %s\n\n",
+                                title, pricing, info, cstdate, completeUrl, floorPlanImage, amenitiesList, location, property_id);
+                        apartments instert2DB = new apartments(title,info,pricing,cstdate,completeUrl, amenitiesList,floorPlanImage,location,property_id);
+                        apartmentsRepository.save(instert2DB);
+                    }
+
                     counter++;
                 }
             }
@@ -196,7 +216,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+/*
     private void getAzul(){
         long property_id=3;
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
@@ -289,7 +309,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+*/
     /*
     private void getAlexan(){
     //https://alexane6.com/floor-plans/
