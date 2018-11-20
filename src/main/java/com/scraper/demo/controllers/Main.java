@@ -267,11 +267,15 @@ public class Main {
                     System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll("Rent.*$","");
+
                     System.out.println(counter + ") " + title);
+
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll(".*Rent ","");
+
                     String viewavailable = ((DomAttr) htmlItem.getFirstByXPath("./a[contains(@class,'fp-button floorplan-availability-link')]/@href"))
                             .getValue();
+
                     String url = ("https://www.lenoxboardwalk.com/floorplans/" + viewavailable);
 
                     System.out.println(pricing);
