@@ -93,7 +93,7 @@ public class Main {
         return "fillDatabase";
     }
 
-    // method below 'filldatabase' was created before adding the timer for once a day execution.
+    // run method below and comment the one above in order to fill database without a timer
     /*
     @GetMapping("/filldatabase")
     public String filldatabase(){
