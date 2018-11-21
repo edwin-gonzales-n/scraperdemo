@@ -3,11 +3,13 @@ package com.scraper.demo.models;
 import org.hibernate.validator.constraints.NotBlank;
 import javax.persistence.Entity;
 import javax.persistence.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "apartments")
-public class apartments {
+public class Apartments {
 
     @Id
     @GeneratedValue
@@ -40,17 +42,16 @@ public class apartments {
     @Column(nullable = false)
     private String location;
 
-    @NotBlank(message = "Must have property_id")
-    @Column(nullable = false)
+    @Column
     private long property_id;
 
-    // tickets added by Edwin
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "apartment_id")
-    private List<amenity> amenities;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "apartment")
+    private Set<Amenities> amenities = new HashSet<>();
 
-    public apartments(){}
+    public Apartments(){}
 
-    public apartments(long id, String title, String availability, String price, String updated, String url, List<amenity> amenities, String floorplan, String location, long property_id)
+
+    public Apartments(long id, String title, String availability, String price, String updated, String url, Set<Amenities> amenities, String floorplan, String location, long property_id)
     {
         this.id = id;
         this.title = title;
@@ -63,8 +64,23 @@ public class apartments {
         this.location = location;
         this.property_id=property_id;
     }
+
+    // insert into db but without including amenities, it will be used separetely with getters and setters
+    public Apartments(String title, String availability, String price, String updated, String url, String floorplan, String location, long property_id)
+    {
+        this.id = id;
+        this.title = title;
+        this.availability = availability;
+        this.price = price;
+        this.updated = updated;
+        this.url = url;
+        this.floorplan = floorplan;
+        this.location = location;
+        this.property_id=property_id;
+    }
+
 //    Insert into database
-    public apartments(String title, String availability, String price, String updated, String url, List<amenity> amenities, String floorplan, String location,long property_id)
+    public Apartments(String title, String availability, String price, String updated, String url, Set<Amenities> amenities, String floorplan, String location, long property_id)
     {
         this.title = title;
         this.availability = availability;
@@ -80,11 +96,11 @@ public class apartments {
 //    setters and getters
 
 
-    public List<amenity> getAmenities() {
+    public Set<Amenities> getAmenities() {
         return amenities;
     }
 
-    public void setAmenities(List<amenity> amenities) {
+    public void setAmenities(Set<Amenities> amenities) {
         this.amenities = amenities;
     }
 

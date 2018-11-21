@@ -7,18 +7,17 @@
 
 package com.scraper.demo.controllers;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomAttr;
 import com.gargoylesoftware.htmlunit.html.HtmlElement;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.scraper.demo.models.amenity;
-import com.scraper.demo.models.apartments;
+import com.scraper.demo.models.Amenities;
+import com.scraper.demo.models.Apartments;
+import com.scraper.demo.repositories.AmenitiesRepository;
 import com.scraper.demo.repositories.ApartmentsRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,9 +31,11 @@ import java.util.*;
 public class Main {
 
     public ApartmentsRepository apartmentsRepository;
+    public AmenitiesRepository amenitiesRepository;
 
-    public Main(ApartmentsRepository apartmentsRepository){
+    public Main(ApartmentsRepository apartmentsRepository, AmenitiesRepository amenitiesRepository){
         this.apartmentsRepository = apartmentsRepository;
+        this.amenitiesRepository = amenitiesRepository;
     }
 
     // **************************************************
@@ -70,14 +71,15 @@ public class Main {
     // **************************************************
     /**  The filldatabase method calls the scraper methods and fills the database.
      *   It is wrapped around a timer that makes the method run once a day.
-     *   Every time the method is called, it first clean the table 'apartments' in the DB.*/
+     *   Every time the method is called, it first clean the table 'Apartments' in the DB.*/
     @GetMapping("/filldatabase")
     public String filldatabase(){
         // timer to refill database with new data everyday, once a day.
         TimerTask repeatedTask = new TimerTask() {
             @Override
             public void run() {
-                apartmentsRepository.truncateApartmentsTable();
+//                amenitiesRepository.truncateAmenitiesTable();
+//                apartmentsRepository.truncateApartmentsTable();
 //                getNuecesApartment();
                 getLakeShore();
 //                getAzul();
@@ -141,13 +143,13 @@ public class Main {
                     String price = ((HtmlElement) htmlItem.getFirstByXPath("./p[contains(text(),'Starting')]")).asText();
                     System.out.printf("%d. Title: %s\nInfo: %s\nDimensions & Price: %s\n\n", counter, title, info, price);
 
-                    apartments hnItem = new apartments(title,info,price,cstdate,url,property_id);
+                    Apartments hnItem = new Apartments(title,info,price,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
                     counter++;
                 }
                 // use when not using RestController
-//                model.addAttribute("apartments", apartmentsRepository.findAll());
-//                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
+//                model.addAttribute("Apartments", apartmentsRepository.findAll());
+//                model.addAttribute("Apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -193,20 +195,29 @@ public class Main {
 
                     HtmlPage secondPage = client.getPage(completeUrl);
                     String floorPlanImage = ((DomAttr) secondPage.getFirstByXPath("//img[contains(@class, 'img-responsive center-block')]/@src")).getValue();
-                    //arraylist for amenities
+
+                    //arraylist for Amenities
                     List<HtmlElement> amenities = secondPage.getByXPath("//li[contains(@class,'col-sm-6')]");
 
 
-                    for(HtmlElement amenity : amenities){
-                        String addAmenity = ((HtmlElement) amenity.getFirstByXPath("./p")).asText();
-                        amenitiesList.add(String.format("\"%s\"", addAmenity));
-                    }
-
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
+
+                        Apartments insert2DB = new Apartments(title,info,pricing,cstdate,completeUrl,floorPlanImage,location,property_id);
+
+                        for(HtmlElement amenity : amenities){
+                            String addAmenity = ((HtmlElement) amenity.getFirstByXPath("./p")).asText();
+                            amenitiesList.add(String.format("\"%s\"", addAmenity));
+
+                            Amenities amenities1 = new Amenities();
+                            amenities1.setApartment(insert2DB);
+                            amenities1.setName(addAmenity);
+                            insert2DB.getAmenities().add(amenities1);
+                        }
+
                         System.out.printf("Title: %s\nPrice: %s\nAvailable: %s\nDate pulled: %s\nUrl: %s\nFloorplan: %s\nAmenities: %s\nLocation: %s\nProperty ID: %s\n\n",
                                 title, pricing, info, cstdate, completeUrl, floorPlanImage, amenitiesList, location, property_id);
-                        apartments instert2DB = new apartments(title,info,pricing,cstdate,completeUrl, amenitiesList,floorPlanImage,location,property_id);
-                        apartmentsRepository.save(instert2DB);
+
+                        apartmentsRepository.save(insert2DB);
                     }
 
                     counter++;
@@ -249,7 +260,7 @@ public class Main {
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
                     System.out.println(url);
 
-                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
+                    Apartments hnItem = new Apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
                     counter++;
                 }
@@ -298,7 +309,7 @@ public class Main {
                     System.out.println(info);
                     System.out.println("This is lenux url" +url);
 
-                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
+                    Apartments hnItem = new Apartments(title,info,pricing,cstdate,url,property_id);
                     apartmentsRepository.save(hnItem);
                     System.out.println("done saving to DB");
 
