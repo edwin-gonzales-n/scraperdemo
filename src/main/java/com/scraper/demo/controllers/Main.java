@@ -117,6 +117,8 @@ public class Main {
      */
     private void getNuecesApartment() {
         long property_id=1;
+        String location="30.287978, -97.743497";
+
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
@@ -140,7 +142,7 @@ public class Main {
                     String price = ((HtmlElement) htmlItem.getFirstByXPath("./p[contains(text(),'Starting')]")).asText();
                     System.out.printf("%d. Title: %s\nInfo: %s\nDimensions & Price: %s\n\n", counter, title, info, price);
 
-                    apartments hnItem = new apartments(title,info,price,cstdate,url,property_id);
+                    apartments hnItem = new apartments(title,info,price,cstdate,url,property_id,location);
                     apartmentsRepository.save(hnItem);
                     counter++;
                 }
@@ -155,6 +157,7 @@ public class Main {
 
     private void getLakeShore(){
         long property_id=2;
+        String location = "30.242056, -97.723472";
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
@@ -186,7 +189,7 @@ public class Main {
 
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
                         System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
-                        apartments hnItem = new apartments(title,info,pricing,cstdate,completeUrl,property_id);
+                        apartments hnItem = new apartments(title,info,pricing,cstdate,completeUrl,property_id,location);
                         apartmentsRepository.save(hnItem);
                     }
                     counter++;
@@ -199,6 +202,7 @@ public class Main {
 
     private void getAzul(){
         long property_id=3;
+        String location = "30.242992, -97.722486";
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
@@ -229,7 +233,7 @@ public class Main {
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
                     System.out.println(url);
 
-                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
+                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id,location);
                     apartmentsRepository.save(hnItem);
                     counter++;
                 }
@@ -241,6 +245,8 @@ public class Main {
 
     private void getLenox(){
         long property_id=4;
+        String location="30.239060, -97.720513";
+
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
@@ -282,7 +288,7 @@ public class Main {
                     System.out.println(info);
                     System.out.println("This is lenux url" +url);
 
-                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id);
+                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
                     apartmentsRepository.save(hnItem);
                     System.out.println("done saving to DB");
 

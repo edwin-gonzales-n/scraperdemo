@@ -24,9 +24,9 @@ public class apartments {
     @Column(nullable = false)
     private String price;
 
-    @NotBlank(message = "Must have current time")
+    @NotBlank(message = "Must have current time updated")
     @Column(nullable = false)
-    private String date;
+    private String updated;
 
     @NotBlank(message = "Must have current url")
     @Column(nullable = false)
@@ -35,31 +35,45 @@ public class apartments {
     @Column(nullable = false)
     private long property_id;
 
+    @Column
+    private String location;
+
 
     public apartments(){}
 
-    public apartments(long id, String title, String availability, String price, String date, String url, long property_id)
+    public apartments(long id, String title, String availability, String price, String updated, String url, long property_id, String location)
     {
         this.id = id;
         this.title = title;
         this.availability = availability;
         this.price = price;
-        this.date = date;
+        this.updated = updated;
         this.url = url;
-        this.property_id=property_id;
+        this.property_id = property_id;
+        this.location = location;
     }
 //    Insert into database
-    public apartments(String title, String availability, String price, String date, String url, long property_id)
+    public apartments(String title, String availability, String price, String updated, String url, long property_id, String location)
     {
         this.title = title;
         this.availability = availability;
         this.price = price;
-        this.date = date;
+        this.updated = updated;
         this.url = url;
         this.property_id = property_id;
+        this.location = location;
     }
 
 //    setters and getters
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public long getProperty_id() {
         return property_id;
     }
@@ -76,9 +90,13 @@ public class apartments {
         this.url = url;
     }
 
-    public String getDate() { return date; }
+    public String getUpdated() {
+        return updated;
+    }
 
-    public void setDate(String date) { this.date = date; }
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
 
     public long getId() { return id; }
 
