@@ -85,6 +85,7 @@ public class Main {
                 getLakeShore();
                 getAzul();
                 getLenox();
+                get7east();
             }
         };
         Timer timer = new Timer("Timer");
@@ -119,6 +120,7 @@ public class Main {
      * The application uses HTMLunit libraries in order to scrape website.   For more info just google htmlUnit.  http://htmlunit.sourceforge.net/
      */
     private void getNuecesApartment() {
+
         long property_id=1;
         String location="30.287978, -97.743497";
 
@@ -157,6 +159,7 @@ public class Main {
     }
 
     private void getLakeShore(){
+
         long property_id=2;
         String location = "30.242056, -97.723472";
 
@@ -207,8 +210,8 @@ public class Main {
     }
 
     private void getAzul(){
-        long property_id=3;
 
+        long property_id=3;
         String location = "30.242992, -97.722486";
 
         /*
@@ -255,8 +258,8 @@ public class Main {
     }
 
     private void getLenox(){
-        long property_id=4;
 
+        long property_id=4;
         String location="30.239060, -97.720513";
 
         /*
@@ -273,7 +276,6 @@ public class Main {
          * The function then uses this address to scrape the information locally instead of using the real website.
          * This solution was due that the JS elements would take some time to load and the wrong data was parsed.
          */
-
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -321,29 +323,45 @@ public class Main {
 
     private void get7east(){
 
-        String baseUrl = "https://www.7eastaustin.com/Floor-plans.aspx";
+        long property_id = 5;
         String location = "30.261815, -97.719815";
+
+        /*
+         * The ctsdate value calculates the time and creates a live timestamp each time the app auto-loads once a day.
+         */
+        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
+        String cstdate = dateFormatGmt.format(new Date());
+
+        String baseUrl = "https://www.7eastaustin.com/Floor-plans.aspx";
+
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
-        try {
-            HtmlPage page = client.getPage(baseUrl);
 
+        try {
+
+            HtmlPage page = client.getPage(baseUrl);
             List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'floorplan-block')]");
+
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
-                int counter=1;
 
                 for(HtmlElement htmlItem : itemList){
+
                     String price = ((DomAttr) htmlItem.getFirstByXPath("./meta[contains(@name, 'minimumMarketRent')]/@content")).getValue();
                     String price2 = ((DomAttr) htmlItem.getFirstByXPath("./meta[contains(@name, 'maximumMarketRent')]/@content")).getValue();
+                    String pricing = String.format("$%s - $%s", price, price2);
+                    String url = ((DomAttr) htmlItem.getFirstByXPath("./div/div/div/div/ul/li/span/a/img/@src")).getValue();
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'specification')]")).asText().replaceAll("\\n"," ");
-                    String amenities = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'amenities-container')]")).asText().replaceAll("\\n",", ");
-                    String description = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/p[contains(@class,'pt')]")).asText();
+//                    String amenities = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'amenities-container')]")).asText().replaceAll("\\n",", ");
+                    String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/p[contains(@class,'pt')]")).asText();
 
-                    System.out.println("Title: " + title + "\nprice range: $" + price + " - $" + price2 + "\nAmenities: " + amenities + "\nDescription: " + description + "\nLocation: " + location);
-                    counter++;
+//                    System.out.println("Title: " + title + "\nprice range: " + pricing + "\nAmenities: " + amenities + "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
+
+                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
+                    apartmentsRepository.save(hnItem); // save to db
+
                 }
             }
         } catch (IOException e) {
