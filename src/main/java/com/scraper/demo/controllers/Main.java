@@ -71,7 +71,9 @@ public class Main {
     // **************************************************
     /**  The filldatabase method calls the scraper methods and fills the database.
      *   It is wrapped around a timer that makes the method run once a day.
-     *   Every time the method is called, it first clean the table 'apartments' in the DB.*/
+     *   Every time the method is called, it first clean the table 'apartments' in the DB.
+     *   Please keep in mind that if you run the application for the first time, then you MUST run the
+     *   http://<address>/filldatabase  in order to populate the DB.  This is only needed once.*/
     @GetMapping("/filldatabase")
     public String filldatabase(){
         // timer to refill database with new data everyday, once a day.
@@ -113,12 +115,16 @@ public class Main {
     // **************************************************
     /**
      *
-     * The current value will be 0.
+     * Property_ID is the property id value for each apartment complex
+     * The application uses HTMLunit libraries in order to scrape website.   For more info just google htmlUnit.  http://htmlunit.sourceforge.net/
      */
     private void getNuecesApartment() {
         long property_id=1;
         String location="30.287978, -97.743497";
 
+        /*
+         * The ctsdate value calculates the time and creates a live timestamp each time the app auto-loads once a day.
+         */
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
@@ -128,7 +134,7 @@ public class Main {
         client.getOptions().setJavaScriptEnabled(false);
         try {
             HtmlPage page = client.getPage(baseUrl);
-            List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'has-description')]");
+            List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'has-description')]"); // div containing all the sub-divs with wanted info.
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
@@ -137,18 +143,13 @@ public class Main {
 
                 for(HtmlElement htmlItem : itemList){
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-title')]")).asText();
-                    System.out.println("This is the property_id" + property_id);
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div[contains(@class,'fp-avil')]")).asText();
                     String price = ((HtmlElement) htmlItem.getFirstByXPath("./p[contains(text(),'Starting')]")).asText();
-                    System.out.printf("%d. Title: %s\nInfo: %s\nDimensions & Price: %s\n\n", counter, title, info, price);
 
                     apartments hnItem = new apartments(title,info,price,cstdate,url,property_id,location);
-                    apartmentsRepository.save(hnItem);
+                    apartmentsRepository.save(hnItem); // save to database
                     counter++;
                 }
-                // use when not using RestController
-//                model.addAttribute("apartments", apartmentsRepository.findAll());
-//                model.addAttribute("apartments", apartmentsRepository.findTop12ByOrderByIdDesc());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,10 +159,18 @@ public class Main {
     private void getLakeShore(){
         long property_id=2;
         String location = "30.242056, -97.723472";
+
+        /*
+         * The ctsdate value calculates the time and creates a live timestamp each time the app auto-loads once a day.
+         */
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
         String baseUrl = "https://www.lakeshorepearl.com/Marketing/FloorPlans";
+
+        /*
+         * Webclient method.  Must disable CSS and JS in order to only scrape HTML elements.
+         */
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -173,10 +182,8 @@ public class Main {
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
-                int counter=1;
 
                 for(HtmlElement htmlItem : itemList){
-                    System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'col-xs-9 col-sm-10')]"))
                             .asText().replaceAll("\\n"," ");
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'info row pricing')]"))
@@ -188,12 +195,11 @@ public class Main {
                     String completeUrl = String.format("https://www.lakeshorepearl.com%s" ,url);
 
                     if (!pricing.contains("Inquire") && !info.contains("Inquire")){
-                        System.out.printf("Dimensions: %s\n%s\n%s\n%s\n%s\n\n", title, pricing, info, cstdate, completeUrl);
                         apartments hnItem = new apartments(title,info,pricing,cstdate,completeUrl,property_id,location);
-                        apartmentsRepository.save(hnItem);
+                        apartmentsRepository.save(hnItem); // save to database
                     }
-                    counter++;
                 }
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -202,40 +208,45 @@ public class Main {
 
     private void getAzul(){
         long property_id=3;
+
         String location = "30.242992, -97.722486";
+
+        /*
+         * The ctsdate value calculates the time and creates a live timestamp each time the app auto-loads once a day.
+         */
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
         String baseUrl = "https://azullakeshore.com/floorplans/";
+
+        /*
+         * Webclient method.  Must disable CSS and JS in order to only scrape HTML elements.
+         */
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
 
         try {
             HtmlPage page = client.getPage(baseUrl);
-            System.out.println("HtmlPage executed, next is List HtmlElement itemList");
             List<HtmlElement> itemList = page.getByXPath("//a[contains(@class,'floorplan')]");
-            System.out.println("page.getByXPath executed");
-            System.out.println(itemList);
 
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
-                int counter=1;
 
+                /*
+                 * pricing and info details are not available on the website so i had to replace them with the info below.
+                 */
                 String pricing = "Must inquire on-site";
                 String info = "Must inquire on-site";
 
                 for(HtmlElement htmlItem : itemList){
-                    System.out.println("This is the property_id" + property_id);
-                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).asText().replaceAll("\\n"," ");
-                    System.out.println(title);
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div[contains(@class,'fp_info')]")).
+                            asText().replaceAll("\\n"," ");
                     String url = ((DomAttr) htmlItem.getFirstByXPath("./@href")).getValue();
-                    System.out.println(url);
 
                     apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id,location);
-                    apartmentsRepository.save(hnItem);
-                    counter++;
+                    apartmentsRepository.save(hnItem); //save to database
                 }
             }
         } catch (IOException e) {
@@ -245,54 +256,55 @@ public class Main {
 
     private void getLenox(){
         long property_id=4;
+
         String location="30.239060, -97.720513";
 
+        /*
+         * The ctsdate value calculates the time and creates a live timestamp each time the app auto-loads once a day.
+         */
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss");
         String cstdate = dateFormatGmt.format(new Date());
 
+        /*
+         * Webclient method.  Must disable CSS and JS in order to only scrape HTML elements.
+         * For this website i had to add the parameters "BrowserVersion.getDefault()" in order to
+         * wait for most JS elements to load, the grab the HTML elements, and fist save them locally.
+         * These elements were saved to lenox-boardwalk.html and lives in http://localhost:8080/fakelenox
+         * The function then uses this address to scrape the information locally instead of using the real website.
+         * This solution was due that the JS elements would take some time to load and the wrong data was parsed.
+         */
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
 
         try {
+            /*
+             *  Grabbing html elements from local address.
+             */
             HtmlPage page = client.getPage("http://localhost:8080/fakelenox");
 
             List<HtmlElement> itemList = page.getByXPath("//ul[contains(@id,'floorplan_slider_list')]/li");
-            System.out.println("page.getByXPath executed");
-            System.out.println("This is the itemList: " + itemList);
 
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }
             else{
-                int counter=1;
+
                 String info = "Must inquire on-site";
-//                String url  =  "https://www.lenoxboardwalk.com/floorplans/";
 
                 for(HtmlElement htmlItem : itemList){
-                    System.out.println("This is the property_id" + property_id);
                     String title = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll("Rent.*$","");
-
-                    System.out.println(counter + ") " + title);
-
                     String pricing = ((HtmlElement) htmlItem.getFirstByXPath("./ul[contains(@class,'floorplan-details')]"))
                             .asText().replaceAll("\\n"," ").replaceAll(".*Rent ","");
-
                     String viewavailable = ((DomAttr) htmlItem.getFirstByXPath("./a[contains(@class,'fp-button floorplan-availability-link')]/@href"))
                             .getValue();
 
                     String url = ("https://www.lenoxboardwalk.com/floorplans/" + viewavailable);
 
-                    System.out.println(pricing);
-                    System.out.println(info);
-                    System.out.println("This is lenux url" +url);
-
                     apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
-                    apartmentsRepository.save(hnItem);
-                    System.out.println("done saving to DB");
+                    apartmentsRepository.save(hnItem); // save to db
 
-                    counter++;
                 }
             }
         } catch (IOException e) {
