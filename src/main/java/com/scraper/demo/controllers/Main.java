@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
+
 /**
  * Entry point for this project.
  *
@@ -91,13 +89,12 @@ public class Main {
         Timer timer = new Timer("Timer");
         long delay = 1000L;
         long period = 1000L * 60L * 60L * 24L;
-//        long period = 30000L;
+//        long period = 30000L;````````
         timer.scheduleAtFixedRate(repeatedTask, delay , period);
         return "fillDatabase";
     }
 
-    // run method below and comment the one above in order to fill database without a timer
-    /*
+    /* run method below and comment the one above in order to fill database without a timer
     @GetMapping("/filldatabase")
     public String filldatabase(){
         //cleaning database if filled.
@@ -108,8 +105,7 @@ public class Main {
         getAzul();
         getLenox();
         return "fillDatabase";
-    }
-    */
+    } */
 
     // **************************************************
     // Scrapers and logic to fill database
@@ -119,6 +115,7 @@ public class Main {
      * Property_ID is the property id value for each apartment complex
      * The application uses HTMLunit libraries in order to scrape website.   For more info just google htmlUnit.  http://htmlunit.sourceforge.net/
      */
+
     private void getNuecesApartment() {
 
         long property_id=1;
@@ -357,10 +354,26 @@ public class Main {
 //                    String amenities = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'amenities-container')]")).asText().replaceAll("\\n",", ");
                     String info = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/p[contains(@class,'pt')]")).asText();
 
-//                    System.out.println("Title: " + title + "\nprice range: " + pricing + "\nAmenities: " + amenities + "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
+                    /*
+                     * StringTokenizer will count the words within a string.  I used this object in order to filter the 'info' variable.
+                     * It would come back with the apartment info but for some it would contain a full description.
+                     * So by using the tokenizer we could filter the data input that is longer than 4 words and replace them
+                     * with a simple 'require within'
+                     * Please see logic in the if statement below.
+                     */
+                    StringTokenizer stringTokenizer = new StringTokenizer(info);
+                    System.out.println("This is how many words: " + stringTokenizer.countTokens());
 
-                    apartments hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
-                    apartmentsRepository.save(hnItem); // save to db
+                    apartments hnItem;
+                    if(stringTokenizer.countTokens() > 4){
+                        info = "Inquire within";
+                        System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
+                        hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
+                        apartmentsRepository.save(hnItem); // save to db
+                    } else
+                        System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
+                        hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
+                        apartmentsRepository.save(hnItem); // save to db
 
                 }
             }

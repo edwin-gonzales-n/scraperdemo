@@ -1,3 +1,8 @@
+/* Scraper app for the AR/VR Virtual Pillar team
+ * Apartment Rest Controller class
+ * This RestController class will parce the information within the database and trasnform it to
+ * json objects and serve it whenever the mapping attributes are called.
+ */
 package com.scraper.demo.controllers;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -16,6 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+/**
+ * @author Edwin O. Gonzales
+ */
+
 @RestController
 public class ApartmentsController {
 
@@ -25,6 +34,12 @@ public class ApartmentsController {
         this.apartmentsRepository = apartmentsRepository;
     }
 
+    /*
+     * All the objects use pre-set property IDs variables in order to filter the database by property_ID
+     * i.e - select * from apartments where property_id=?
+     * You can take a look at the database to have a better idea.
+     * Please see ApartmentsRepository for db query function.
+     */
     @GetMapping("/nuecesapartments")
     public Iterable<apartments> showNuecesApartment() {
         long property_id=1;
@@ -46,6 +61,12 @@ public class ApartmentsController {
     @GetMapping("/lenox-boardwalk")
     public Iterable<apartments> showLenoxApartments() {
         long property_id=4;
+        return apartmentsRepository.findapartmentsByProperty_Id(property_id);
+    }
+
+    @GetMapping("/7east-austin")
+    public Iterable<apartments> show7EastApartments() {
+        long property_id=5;
         return apartmentsRepository.findapartmentsByProperty_Id(property_id);
     }
 
