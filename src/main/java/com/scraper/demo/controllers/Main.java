@@ -273,6 +273,7 @@ public class Main {
          * The function then uses this address to scrape the information locally instead of using the real website.
          * This solution was due that the JS elements would take some time to load and the wrong data was parsed.
          */
+
         WebClient client = new WebClient(BrowserVersion.getDefault());
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
@@ -282,8 +283,14 @@ public class Main {
              *  Grabbing html elements from local address.
              */
             HtmlPage page = client.getPage("http://localhost:8080/fakelenox");
-
             List<HtmlElement> itemList = page.getByXPath("//ul[contains(@id,'floorplan_slider_list')]/li");
+
+            /*  This is how you save the html output to a new file within the app tree.  Restart app once done.  Do not run this segment.
+            System.out.println(page.asXml());
+            FileWriter fileWriter = new FileWriter("/Users/eogonzal/IdeaProjects/Scraper_demo/src/main/resources/templates/lenox-boardwalk.html");
+            fileWriter.write(page.asXml());
+            fileWriter.close();
+             */
 
             if(itemList.isEmpty()){
                 System.out.println("No item found");
@@ -312,16 +319,37 @@ public class Main {
         }
     }
 
-    /*
-    private void getAlexan(){
-    //https://alexane6.com/floor-plans/
-    }
-    private void getEastSide(){
-    //https://eastsidestationapts.com/floor-plans
-    }
     private void get7east(){
-    https://www.7eastaustin.com/Floor-plans.aspx
+
+        String baseUrl = "https://www.7eastaustin.com/Floor-plans.aspx";
+        String location = "30.261815, -97.719815";
+        WebClient client = new WebClient();
+        client.getOptions().setCssEnabled(false);
+        client.getOptions().setJavaScriptEnabled(false);
+        try {
+            HtmlPage page = client.getPage(baseUrl);
+
+            List<HtmlElement> itemList = page.getByXPath("//div[contains(@class,'floorplan-block')]");
+            if(itemList.isEmpty()){
+                System.out.println("No item found");
+            }else{
+                int counter=1;
+
+                for(HtmlElement htmlItem : itemList){
+                    String price = ((DomAttr) htmlItem.getFirstByXPath("./meta[contains(@name, 'minimumMarketRent')]/@content")).getValue();
+                    String price2 = ((DomAttr) htmlItem.getFirstByXPath("./meta[contains(@name, 'maximumMarketRent')]/@content")).getValue();
+                    String title = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div[contains(@class,'specification')]")).asText().replaceAll("\\n"," ");
+                    String amenities = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/div[contains(@class,'amenities-container')]")).asText().replaceAll("\\n",", ");
+                    String description = ((HtmlElement) htmlItem.getFirstByXPath("./div/div/div/div/p[contains(@class,'pt')]")).asText();
+
+                    System.out.println("Title: " + title + "\nprice range: $" + price + " - $" + price2 + "\nAmenities: " + amenities + "\nDescription: " + description + "\nLocation: " + location);
+                    counter++;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-     */
+
 
 }
