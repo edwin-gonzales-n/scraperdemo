@@ -371,10 +371,13 @@ public class Main {
                         System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
                         hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
-                    } else
+                    }
+                    else if (stringTokenizer.countTokens() < 5){
                         System.out.println("Title: " + title + "\nprice range: " + pricing + "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
                         hnItem = new apartments(title, info, pricing, cstdate, url, property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
+                    }
+
 
                 }
             }
