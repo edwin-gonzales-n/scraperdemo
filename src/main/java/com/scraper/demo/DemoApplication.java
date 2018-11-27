@@ -10,19 +10,24 @@ import java.util.Optional;
 
 @SpringBootApplication
 public class DemoApplication extends SpringBootServletInitializer {
-//    private static final String BASE_URI;
-//    private static final String protocol;
-//    private static final Optional<String> host;
-//    private static final String path;
-//    private static final Optional<String> port;
+    /*
+    // the below commented-out code is used when deploying application using the
+    // oracle Application Container app.
+    *
+    private static final String BASE_URI;
+    private static final String protocol;
+    private static final Optional<String> host;
+    private static final String path;
+    private static final Optional<String> port;
 
-//    static{
-//        protocol = "http://";
-//        host = Optional.ofNullable(System.getenv("HOSTNAME"));
-//        port = Optional.ofNullable(System.getenv("PORT"));
-//        path = "blog";
-//        BASE_URI = protocol + host.orElse("localhost") + ":" + port.orElse("8080") + "/" + path + "/";
-//    }
+    static{
+        protocol = "http://";
+        host = Optional.ofNullable(System.getenv("HOSTNAME"));
+        port = Optional.ofNullable(System.getenv("PORT"));
+        path = "blog";
+        BASE_URI = protocol + host.orElse("localhost") + ":" + port.orElse("8080") + "/" + path + "/";
+    }
+     */
 
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);

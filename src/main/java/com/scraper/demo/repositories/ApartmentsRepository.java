@@ -11,13 +11,15 @@ import java.util.List;
 
 @Repository
 public interface ApartmentsRepository extends CrudRepository<apartments, Long> {
-//    @Query("select e from (select e from apartments order by id desc limit 12) sub order by id")
-//    Iterable<apartments> findTop12ByOrderByIdDesc();  //works
-//    Iterable<apartments> findAllByProperty_id(long property_id);
-
+    /*
+     * custom query to pull data from DB by property_id
+     */
     @Query(nativeQuery =true, value = "SELECT * from apartments WHERE property_id = ?1")
     List<apartments> findapartmentsByProperty_Id(long n);
 
+    /*
+     * custom query to truncate table once a day.  The app logic will then populate with new data.
+     */
     @Query(nativeQuery = true, value = "truncate table apartments")
     @Modifying
     @Transactional

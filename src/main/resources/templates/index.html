@@ -16,18 +16,6 @@
 <body>
 <h1>Edwin's site</h1>
 
-<!--<div id="hideMe">-->
-    <!--<a onclick="getNuecesApartments()" class="btn btn-outline btn-outline-primary d-inline-block">Nueces</a>-->
-    <!--<a onclick="getLakeshorePearl()" class="btn btn-outline btn-outline-primary d-inline-block">Lakeshore</a>-->
-    <!--<a onclick="getLenoxBoardwalk()" class="btn btn-outline btn-outline-primary d-inline-block">Lenux Boardwalk</a>-->
-<!--</div>-->
-
-<!--<div id="sensors">-->
-    <!--<a onclick="getTemperature1()" class="btn btn-outline btn-outline-primary d-inline-block">Temperature</a>-->
-    <!--<a onclick="getHumidity1()" class="btn btn-outline btn-outline-primary d-inline-block">Humidity</a>-->
-    <!--<a onclick="getMoisture1()" class="btn btn-outline btn-outline-primary d-inline-block">Moisture</a>-->
-<!--</div>-->
-
 <br/>
 <div class="container-fluid">
     <div class="row d-flex justify-content-center">
@@ -41,32 +29,6 @@
         </div>
     </div>
 </div>
-
-
-    <!--<div class="container">-->
-        <!--<p class="lead">Apartment Listings at www.2400nuecesapartments.com</p>-->
-        <!--<div class="col-sm-12 col-lg-6 col-xl-12 d-flex flex-column">-->
-            <!--<table class="table table-striped">-->
-                <!--<thead>-->
-                <!--<tr>-->
-                    <!--<th scope="col">Date</th>-->
-                    <!--<th scope="col">Title</th>-->
-                    <!--<th scope="col">Status</th>-->
-                    <!--<th scope="col">Plan and Price</th>-->
-                <!--</tr>-->
-                <!--</thead>-->
-                <!--<tbody>-->
-                <!--<tr th:each="apartment : ${apartments}">-->
-                    <!--<td th:text="${apartment.getDate()}"></td>-->
-                    <!--<td th:text="${apartment.getTitle()}"></td>-->
-                    <!--<td th:text="${apartment.getInfo()}"></td>-->
-                    <!--<td th:text="${apartment.getPrice()}"></td>-->
-                    <!--&lt;!&ndash;<li th:text="'Date: ' + ${apartment.getDate()}"></li>&ndash;&gt;-->
-                <!--</tr>-->
-                <!--</tbody>-->
-            <!--</table>-->
-        <!--</div>-->
-    <!--</div>-->
 
 <div th:fragment="scripts">
     <script th:src="@{/js/jquery-2.2.4.min.js}"></script>

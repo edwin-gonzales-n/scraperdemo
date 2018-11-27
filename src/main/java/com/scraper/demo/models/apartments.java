@@ -1,3 +1,8 @@
+/* Scraper app for the AR/VR Virtual Pillar team
+ * Apartment model.
+ * This class is used for building the database tables.  Also, the constructors to either insert or pull data from the DB.
+ */
+
 package com.scraper.demo.models;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -10,7 +15,7 @@ public class apartments {
 
     @Id
     @GeneratedValue
-    private long id;
+    private long id; //auto generated
 
     @NotBlank(message = "Must have title")
     @Column(nullable = false)
@@ -39,7 +44,7 @@ public class apartments {
     private String location;
 
 
-    public apartments(){}
+    public apartments(){}//open constructor
 
     public apartments(long id, String title, String availability, String price, String updated, String url, long property_id, String location)
     {
@@ -51,8 +56,8 @@ public class apartments {
         this.url = url;
         this.property_id = property_id;
         this.location = location;
-    }
-//    Insert into database
+    } // pull from DB
+
     public apartments(String title, String availability, String price, String updated, String url, long property_id, String location)
     {
         this.title = title;
@@ -62,7 +67,7 @@ public class apartments {
         this.url = url;
         this.property_id = property_id;
         this.location = location;
-    }
+    } // insert into DB.
 
 //    setters and getters
 
