@@ -91,10 +91,6 @@
             <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
             <version>3.2.5</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.keycloak</groupId>-->
-            <!--<artifactId>keycloak-spring-boot-starter</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-rest-hal-browser</artifactId>
