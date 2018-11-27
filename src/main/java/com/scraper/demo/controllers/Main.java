@@ -118,6 +118,7 @@ public class Main {
 
     private void getNuecesApartment() {
 
+
         long property_id=1;
         String location="30.287978, -97.743497";
 
@@ -365,14 +366,14 @@ public class Main {
                     System.out.println("This is how many words: " + stringTokenizer.countTokens());
 
                     apartments hnItem;
-                    if(stringTokenizer.countTokens() > 4){
+                    if(stringTokenizer.countTokens() > 5){
                         info = "Inquire within";
                         System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
                         hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
                     } else
-                        System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
-                        hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
+                        System.out.println("Title: " + title + "\nprice range: " + pricing + "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
+                        hnItem = new apartments(title, info, pricing, cstdate, url, property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
 
                 }
