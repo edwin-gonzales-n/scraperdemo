@@ -84,12 +84,12 @@ public class Main {
                 getAzul();
                 getLenox();
                 get7east();
+                System.out.println("done filling DB!");
             }
         };
         Timer timer = new Timer("Timer");
         long delay = 1000L;
-        long period = 1000L * 60L * 60L * 24L;
-//        long period = 30000L;````````
+        long period = 1000L * 60L * 60L * 24L; // 24h period
         timer.scheduleAtFixedRate(repeatedTask, delay , period);
         return "fillDatabase";
     }
@@ -118,7 +118,6 @@ public class Main {
 
     private void getNuecesApartment() {
 
-
         long property_id=1;
         String location="30.287978, -97.743497";
 
@@ -138,7 +137,6 @@ public class Main {
             if(itemList.isEmpty()){
                 System.out.println("No item found");
             }else{
-                int counter=1;
                 String url = "No url available";
 
                 for(HtmlElement htmlItem : itemList){
@@ -148,7 +146,6 @@ public class Main {
 
                     apartments hnItem = new apartments(title,info,price,cstdate,url,property_id,location);
                     apartmentsRepository.save(hnItem); // save to database
-                    counter++;
                 }
             }
         } catch (IOException e) {
@@ -358,7 +355,7 @@ public class Main {
                     /*
                      * StringTokenizer will count the words within a string.  I used this object in order to filter the 'info' variable.
                      * It would come back with the apartment info but for some it would contain a full description.
-                     * So by using the tokenizer we could filter the data input that is longer than 4 words and replace them
+                     * So by using the tokenizer we could filter the data input that is longer than 5 words and replace them
                      * with a simple 'require within'
                      * Please see logic in the if statement below.
                      */
@@ -368,23 +365,17 @@ public class Main {
                     apartments hnItem;
                     if(stringTokenizer.countTokens() > 5){
                         info = "Inquire within";
-                        System.out.println("Title: " + title + "\nprice range: " + pricing +  "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
                         hnItem = new apartments(title,info,pricing,cstdate,url,property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
                     }
                     else if (stringTokenizer.countTokens() < 5){
-                        System.out.println("Title: " + title + "\nprice range: " + pricing + "\nDescription: " + info + "\nLocation: " + location + "\nUrl: " + url);
                         hnItem = new apartments(title, info, pricing, cstdate, url, property_id, location);
                         apartmentsRepository.save(hnItem); // save to db
                     }
-
-
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 }
